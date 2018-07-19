@@ -33,3 +33,9 @@ else: unix:!android: target.path = /opt/$${TARGET}/bin
 HEADERS += \
     IExperiment.h \
     BWOExperiment.h
+
+win32:CONFIG(release, debug|release): LIBS += -L$$PWD/'../../../../../../Program Files (x86)/National Instruments/NI-DAQ/DAQmx ANSI C Dev/lib/msvc/' -lNIDAQmx
+else:win32:CONFIG(debug, debug|release): LIBS += -L$$PWD/'../../../../../../Program Files (x86)/National Instruments/NI-DAQ/DAQmx ANSI C Dev/lib/msvc/' -lNIDAQmxd
+
+INCLUDEPATH += $$PWD/'../../../../../../Program Files (x86)/National Instruments/NI-DAQ/DAQmx ANSI C Dev/include'
+DEPENDPATH += $$PWD/'../../../../../../Program Files (x86)/National Instruments/NI-DAQ/DAQmx ANSI C Dev/include'
