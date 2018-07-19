@@ -8,11 +8,14 @@
 
 BWOExperiment::BWOExperiment()
 {
-
+    QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);
 }
 
 void BWOExperiment::toDo()
 {
+    // Sending signal that experiment has been started
+    emit ExperimentStarted();
+
     try
     {
         DAQmxErrChk (DAQmxCreateTask("",&hTaskInput));
@@ -54,11 +57,15 @@ void BWOExperiment::toDo()
         DAQmxClearTask(hTaskOutput);
     }
 
+    // emitting signal that experiment ended
+    emit ExperimentFinished();
     qDebug() << "To do function ended";
 }
 
 void BWOExperiment::toDo(QObject *expSettings)
 {
+    emit ExperimentStarted();
+
     try
     {
         DAQmxErrChk (DAQmxCreateTask("",&hTaskInput));
@@ -73,12 +80,14 @@ void BWOExperiment::toDo(QObject *expSettings)
         for(int i = 1; i <= 30; i++)
         {
             DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput,false,4,i*0.1,NULL));
-            QThread::msleep(1000);
+            QThread::msleep(500);
             qDebug() << "Current voltage value is " << i*0.1;
             //            cout << i*0.001;
             //            DAQmxErrChk (DAQmxReadAnalogScalarF64(hTaskInput,4,&voltageValue,NULL));
             //            fout << i*0.1 << "\t" << voltageValue << endl;
             //            Sleep(1000);
+            double progress = i / 30.0 * 100.0;
+            emit ProgressChanged(progress);
         }
     }
     catch(int error)
@@ -100,6 +109,8 @@ void BWOExperiment::toDo(QObject *expSettings)
         DAQmxClearTask(hTaskOutput);
     }
 
+    emit ExperimentFinished();
+
     qDebug() << "To do function ended";
 }
 
@@ -109,4 +120,9 @@ void BWOExperiment::stop()
     // Add voltage reset when experiment is finished
 
     IExperiment::stop();
+}
+
+void BWOExperiment::onProgressChanged(double progress)
+{
+    qDebug() << "Current progress is " << progress;
 }

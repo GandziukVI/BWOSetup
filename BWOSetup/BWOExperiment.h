@@ -12,6 +12,7 @@ public:
     BWOExperiment();
     void toDo() override;
     void toDo(QObject *expSettings) override;
+    void stop() override;
 
 private:
     const float64   MAX_VOLTAGE_VALUE = 5.0;    // 0 V .. +5 V is output range
@@ -30,6 +31,8 @@ private:
     int32 read;
     int vStart, vStop, step = 10, nPoints;
 
+public slots:
+    void onProgressChanged(double progress);
 };
 
 #endif // BWOEXPERIMENT_H

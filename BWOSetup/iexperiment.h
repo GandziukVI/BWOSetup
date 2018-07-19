@@ -24,6 +24,12 @@ public:
 private:
     mutable QMutex mIExperimentMutex;
     QFuture<void>  mExpThreadRes;
+
+signals:
+    void StatusChanged(QString &stautusString);
+    void ProgressChanged(double progressValue);
+    void ExperimentStarted();
+    void ExperimentFinished();
 };
 
 #endif // IEXPERIMENT_H

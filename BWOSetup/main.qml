@@ -9,6 +9,6 @@ Window {
     title: qsTr("Hello World")
 
     Button {
-        text: "Motherfucker"
+        text: "Temp button"
     }
 }
