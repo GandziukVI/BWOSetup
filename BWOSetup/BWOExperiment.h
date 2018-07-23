@@ -13,6 +13,7 @@ public:
     void toDo() override;
     void toDo(QObject *expSettings) override;
     void stop() override;
+    ~BWOExperiment();
 
 private:
     const float64   MAX_VOLTAGE_VALUE = 5.0;    // 0 V .. +5 V is output range

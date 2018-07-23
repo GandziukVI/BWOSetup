@@ -14,6 +14,11 @@ BWOExperiment::BWOExperiment()
     QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);
 }
 
+BWOExperiment::~BWOExperiment()
+{
+    stop();
+}
+
 void BWOExperiment::toDo()
 {
     qDebug() << "To do() function ended";
@@ -83,8 +88,6 @@ void BWOExperiment::toDo(QObject *expSettings)
     emit ExperimentFinished();
 
     qDebug() << "To do() function with arguments ended";
-
-    this->stop();
 }
 
 void BWOExperiment::stop()
@@ -115,7 +118,6 @@ void BWOExperiment::stop()
         DAQmxClearTask(hTaskOutput);
     }
     qDebug() << "Voltage was reset. Tasks are cleaned.";
-    IExperiment::stop();
 }
 
 void BWOExperiment::onProgressChanged(double progress)
