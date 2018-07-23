@@ -1,23 +1,32 @@
-#include <QGuiApplication>
-#include <QQmlApplicationEngine>
+#include <QtWidgets/QApplication>
+#include <QtQuick/QQuickView>
+#include <QtCore/QDir>
+#include <QtQml/QQmlContext>
+#include <QtQml/QQmlEngine>
 
 #include "BWOExperiment.h"
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);
 
-    QGuiApplication app(argc, argv);
+    QApplication app(argc, argv);
 
-    QQmlApplicationEngine engine;
-    engine.load(QUrl(QStringLiteral("qrc:/main.qml")));
-    if (engine.rootObjects().isEmpty())
-        return -1;
+    QQuickView viewer;
+    QObject::connect(viewer.engine(), &QQmlEngine::quit, &viewer, &QWindow::close);
+
+    QUrl source = QUrl("qrc:/qml/main.qml");
+
+    viewer.setTitle(QStringLiteral("Backward Wave Oscillator (BWO)"));
+
+    viewer.setSource(source);
+    viewer.setResizeMode(QQuickView::SizeRootObjectToView);
+    viewer.show();
 
     // For testing purpose
     // see output in debug console
-    BWOExperiment experiment;
-    experiment.start();
+//    BWOExperiment experiment;
+//    experiment.start();
 
     return app.exec();
 }

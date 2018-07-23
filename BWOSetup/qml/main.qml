@@ -4,15 +4,13 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtCharts 2.2
 
-Window {
+Item {
     id: root
 
     width: 1280
     height: 720
 
     visible: true
-
-    title: qsTr("Backward Wave Oscillator (BWO)")
 
     MouseArea {
         anchors.fill: parent
