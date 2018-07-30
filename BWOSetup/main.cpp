@@ -25,8 +25,9 @@ int main(int argc, char **argv)
 
     // For testing purpose
     // see output in debug console
-//    BWOExperiment experiment;
-//    experiment.start();
+    QObject *expSettings = new QObject();
+    BWOExperiment experiment(expSettings);
+    experiment.start();
 
     return app.exec();
 }
