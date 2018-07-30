@@ -9,17 +9,18 @@ class IExperiment : public QObject
 {
     Q_OBJECT
 public:
-    IExperiment();
     IExperiment(QObject *expSettings);
     ~IExperiment();
 
     virtual void start();
     virtual void stop();
-    virtual void toDo() = 0;
-    virtual void toDo(QObject *expSettings) = 0;
 
+protected:
     bool    mExperimentIsRunning;
     QObject *mExpSettings;
+
+    IExperiment();
+    virtual void toDo(QObject *expSettings) = 0;
 
 private:
     mutable QMutex mIExperimentMutex;

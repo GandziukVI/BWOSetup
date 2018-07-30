@@ -3,7 +3,7 @@
 #include <QtConcurrent/QtConcurrent>
 
 IExperiment::IExperiment()
-    : mExpSettings(NULL)
+    : mExpSettings(nullptr)
 {
 }
 
@@ -15,15 +15,17 @@ IExperiment::IExperiment(QObject *expSettings)
 IExperiment::~IExperiment()
 {
     qDebug() << "We are in a IE destructor\n";
+
     if(mExperimentIsRunning)
-    {
         stop();
-    }
 }
 
 void IExperiment::start()
 {
-    mExpThreadRes = QtConcurrent::run(this, &this->toDo, mExpSettings);
+    if (mExpSettings != nullptr)
+        mExpThreadRes = QtConcurrent::run(this, &this->toDo, mExpSettings);
+    // To DO: Implement no argument exception
+    else throw;
 }
 
 void IExperiment::stop()

@@ -10,22 +10,25 @@
 #define DAQmxErrChk(functionCall) if( DAQmxFailed(error=(functionCall)) ) throw error
 
 BWOExperiment::BWOExperiment()
+    : IExperiment()
 {
     QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);
 }
 
-BWOExperiment::~BWOExperiment()
+BWOExperiment::BWOExperiment(QObject *expSettings)
+    : IExperiment (expSettings)
 {
-    stop();
 }
 
-void BWOExperiment::toDo()
+BWOExperiment::~BWOExperiment()
 {
-    qDebug() << "To do() function ended";
+    if (mExperimentIsRunning)
+        stop();
 }
 
 void BWOExperiment::toDo(QObject *expSettings)
 {
+    mExpSettings = expSettings;
     // Concept of working with NI DAQmx: Create Task ->
     // -> Configurate its channel(s) -> Start Task ->
     // -> Write/Read/other actions with the channel(s) ->
