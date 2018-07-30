@@ -26,7 +26,8 @@ Rectangle {
 
     property int multiplierWidth: 75
     property int inputWidth: 75
-    property int multiplierSelectedIndex: 0
+    property int multiplierSelectedIndex: 5
+
 
     GridLayout {
         anchors.fill: parent
@@ -40,9 +41,11 @@ Rectangle {
 
             Layout.fillWidth: true
 
-            onTextChanged: {
-                inputValue = parseFloat(text);
-                root.editingFinished
+            text: inputValue.toString()
+            Binding {
+                target: root
+                property: "inputValue"
+                value: parseFloat(root.text)
             }
         }
         ComboBox {
@@ -55,15 +58,25 @@ Rectangle {
             Layout.fillWidth: true
 
             currentIndex: multiplierSelectedIndex
+            Binding {
+                target: root
+                property: "multiplierSelectedIndex"
+                value: multiplierSelector.currentIndex
+            }
 
             property variant multiplierModel: ListModel {
+                ListElement { text: qsTr("G") }
+                ListElement { text: qsTr("M") }
+                ListElement { text: qsTr("k") }
+                ListElement { text: qsTr("h") }
+                ListElement { text: qsTr("da") }
                 ListElement { text: qsTr("") }
                 ListElement { text: qsTr("m") }
                 ListElement { text: qsTr("μ") }
                 ListElement { text: qsTr("n") }
             }
 
-            property var multiplierCoefficients: [ 1.0, 1.0e-3, 1.0e-6, 1.0e-9 ]
+            property var multiplierCoefficients: [1.0e9, 1.0e6, 1.0e3, 1.0e2, 10.0, 1.0, 1.0e-3, 1.0e-6, 1.0e-9 ]
 
             model: ListModel {
                 id: multiplierSelectorModel
@@ -81,7 +94,6 @@ Rectangle {
         for(i = 0; i < multiplierModel.count; i++) {
             multiplierSelectorModel.append({ "text": multiplierModel.get(i).text + units });
         }
-        multiplierSelector.currentIndex = multiplierSelectedIndex;
     }
 
     onUnitsChanged: {
