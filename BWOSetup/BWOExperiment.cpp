@@ -33,7 +33,7 @@ void BWOExperiment::toDo(QObject *expSettings)
 
     // Sending signal that experiment has been started
     emit ExperimentStarted();
-
+    mExperimentIsRunning = true;
     try
     {
         // Configuration
@@ -86,7 +86,7 @@ void BWOExperiment::toDo(QObject *expSettings)
 
     // emitting signal that experiment ended
     emit ExperimentFinished();
-
+    mExperimentIsRunning = false;
     qDebug() << "To do() function with arguments ended";
 }
 
@@ -118,6 +118,7 @@ void BWOExperiment::stop()
         DAQmxClearTask(hTaskOutput);
     }
     qDebug() << "Voltage was reset. Tasks are cleaned.";
+    IExperiment::stop();
 }
 
 void BWOExperiment::onProgressChanged(double progress)

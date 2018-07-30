@@ -14,7 +14,11 @@ IExperiment::IExperiment(QObject *expSettings)
 
 IExperiment::~IExperiment()
 {
-    stop();
+    qDebug() << "We are in a IE destructor\n";
+    if(mExperimentIsRunning)
+    {
+        stop();
+    }
 }
 
 void IExperiment::start()
@@ -28,4 +32,5 @@ void IExperiment::stop()
         mExpThreadRes.cancel();
         mExpThreadRes.waitForFinished();
     }
+    qDebug() << "stop IExp";
 }
