@@ -22,8 +22,7 @@ BWOExperiment::BWOExperiment(QObject *expSettings)
 
 BWOExperiment::~BWOExperiment()
 {
-    if (mExperimentIsRunning)
-        stop();
+    stop();
 }
 
 void BWOExperiment::toDo(QObject *expSettings)
@@ -52,10 +51,17 @@ void BWOExperiment::toDo(QObject *expSettings)
 
         // TO DO:
         // Get this information from the Window
-        lowestVoltage = 0;
-        hightesVoltage = 3;
-        numberPoints = 7;
-        averageCycles = 3;
+        float64         lowestVoltage = 0;
+        float64         hightesVoltage = 3;
+        int32           numberPoints = 7;
+        int32           averageCycles = 3;
+        unsigned long   delayBetweenMeasurements = 500;
+
+        // Helpful variables in the algorythm
+        float64         average = 0;
+        float64         voltageReadValue = 0;
+        float64         frequencyWriteVoltage = 0;
+
         float64 delta = (hightesVoltage - lowestVoltage) / (numberPoints - 1);
         for(int32 i = 0; i < numberPoints; i++)
         {
@@ -69,7 +75,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                 DAQmxErrChk (DAQmxReadAnalogScalarF64(hTaskInput, TIMEOUT, &voltageReadValue, NULL));
                 average += voltageReadValue;
                 qDebug() << "Current read voltage value is " << voltageReadValue;
-                QThread::msleep(500);
+                QThread::msleep(delayBetweenMeasurements);
             }
             average /= averageCycles;
             qDebug() << "Averaged value is " << average;
@@ -121,6 +127,7 @@ void BWOExperiment::stop()
         DAQmxClearTask(hTaskOutput);
     }
     qDebug() << "Voltage was reset. Tasks are cleaned.";
+
     IExperiment::stop();
 }
 

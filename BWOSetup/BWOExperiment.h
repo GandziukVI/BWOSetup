@@ -31,14 +31,6 @@ private:
     TaskHandle  hTaskInput = nullptr;
     TaskHandle  hTaskOutput = nullptr;
 
-    float64     lowestVoltage = 0;
-    float64     hightesVoltage = 0;
-    int32       numberPoints = 0;
-    float64     voltageReadValue = 0;
-    float64     frequencyWriteVoltage = 0;
-    int32       averageCycles = 0;
-    float64     average = 0;
-
 public slots:
     void onProgressChanged(double progress);
 };
