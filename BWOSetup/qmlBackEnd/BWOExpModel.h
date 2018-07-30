@@ -32,11 +32,11 @@ public:
     void   setDelayTime(const double &value);
 
 signals:
-    void startValueChanged();
-    void stopValueChanged();
-    void nDataPointsChanged();
-    void nAveragesChanged();
-    void delayTimeChanged();
+    void startValueChanged(const double&);
+    void stopValueChanged(const double&);
+    void nDataPointsChanged(const int&);
+    void nAveragesChanged(const int&);
+    void delayTimeChanged(const double&);
 
 private:
     double mStartValue;  // Either Voltage or Frequency

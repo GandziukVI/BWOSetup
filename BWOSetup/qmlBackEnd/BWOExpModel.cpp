@@ -1,7 +1,12 @@
 #include "BWOExpModel.h"
 
 BWOExpModel::BWOExpModel(QObject *parent)
-    : QObject (parent)
+    : QObject (parent),
+      mStartValue(0),
+      mStopValue(3),
+      mNDataPoints(7),
+      mNAverages(3),
+      mDelayTime(0.5)
 {
 
 }
@@ -17,7 +22,7 @@ void BWOExpModel::setStartValue(const double &value)
         return;
 
     mStartValue = value;
-    emit startValueChanged();
+    emit startValueChanged(mStartValue);
 }
 
 double BWOExpModel::stopValue()
@@ -31,7 +36,7 @@ void BWOExpModel::setStopValue(const double &value)
         return;
 
     mStopValue = value;
-    emit stopValueChanged();
+    emit stopValueChanged(mStopValue);
 }
 
 int BWOExpModel::nDataPoints()
@@ -45,7 +50,7 @@ void BWOExpModel::setNDataPoints(const int &value)
         return;
 
     mNDataPoints = value;
-    emit nDataPointsChanged();
+    emit nDataPointsChanged(mNDataPoints);
 }
 
 int BWOExpModel::nAverages()
@@ -59,7 +64,7 @@ void BWOExpModel::setNAverages(const int &value)
         return;
 
     mNAverages = value;
-    emit nAveragesChanged();
+    emit nAveragesChanged(mNAverages);
 }
 
 double BWOExpModel::delayTime()
@@ -73,5 +78,5 @@ void BWOExpModel::setDelayTime(const double &value)
         return;
 
     mDelayTime = value;
-    emit delayTimeChanged();
+    emit delayTimeChanged(mDelayTime);
 }
