@@ -1,5 +1,6 @@
 #include "IExperiment.h"
 
+#include <QThread>
 #include <QtConcurrent/QtConcurrent>
 
 IExperiment::IExperiment()
@@ -23,16 +24,18 @@ IExperiment::~IExperiment()
 void IExperiment::start()
 {
     if (mExpSettings != nullptr)
-        mExpThreadRes = QtConcurrent::run(this, &this->toDo, mExpSettings);
+        mExpThreadRes = QtConcurrent::run(this, &IExperiment::toDo, mExpSettings);
     // To DO: Implement no argument exception
     else throw;
 }
 
 void IExperiment::stop()
 {
+    mExperimentIsRunning = false;
+    QThread::msleep(500);
+
     while (mExpThreadRes.isRunning()) {
         mExpThreadRes.cancel();
         mExpThreadRes.waitForFinished();
     }
-    qDebug() << "stop IExp";
 }

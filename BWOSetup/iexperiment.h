@@ -12,6 +12,7 @@ public:
     IExperiment(QObject *expSettings);
     ~IExperiment();
 
+public slots:
     virtual void start();
     virtual void stop();
 
