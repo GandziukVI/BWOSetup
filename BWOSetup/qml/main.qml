@@ -4,6 +4,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtCharts 2.2
 
+import BWOModel 1.0
+
 Item {
     id: root
 
@@ -15,6 +17,9 @@ Item {
     MouseArea {
         anchors.fill: parent
     }
+
+    signal startButtonClicked()
+    signal stopButtonClicked()
 
     GridLayout {
         anchors.fill: parent
@@ -103,10 +108,18 @@ Item {
                                 text: qsTr("Start Value")
                             }
                             CExtendedNumberInput {
+                                id: startValueInput
                                 Layout.fillWidth: true
 
                                 height: 40
-                                text: qsTr("10")
+
+                                inputValue: dataModel.startValue
+                                Binding {
+                                    target: dataModel
+                                    property: "startValue"
+                                    value: startValueInput.inputValue
+                                }
+
                                 validator: DoubleValidator { locale: qsTr("en_US") }
                                 units: qsTr("")
                             }
@@ -117,10 +130,18 @@ Item {
                                 text: qsTr("Stop Value")
                             }
                             CExtendedNumberInput {
+                                id: stopValueInput
                                 Layout.fillWidth: true
 
                                 height: 40
-                                text: qsTr("100")
+
+                                inputValue: dataModel.stopValue
+                                Binding {
+                                    target: dataModel
+                                    property: "stopValue"
+                                    value: stopValueInput.inputValue
+                                }
+
                                 validator: DoubleValidator { locale: qsTr("en_US") }
                                 units: qsTr("")
                             }
@@ -130,13 +151,20 @@ Item {
                                 Layout.margins: 2.5
                                 text: qsTr("Points Number")
                             }
-                            CExtendedNumberInput {
+                            CTextField {
+                                id: nPointsInput
                                 Layout.fillWidth: true
 
                                 height: 40
-                                text: qsTr("100")
+
+                                text: dataModel.nDataPoints
+                                Binding {
+                                    target: dataModel
+                                    property: "nDataPoints"
+                                    value: nPointsInput.integerValue
+                                }
+
                                 validator: IntValidator { locale: qsTr("en_US") }
-                                units: qsTr("")
                             }
 
                             // Averaging
@@ -144,13 +172,20 @@ Item {
                                 Layout.margins: 2.5
                                 text: qsTr("Averaging Number")
                             }
-                            CExtendedNumberInput {
+                            CTextField {
+                                id: nAveragingInput
                                 Layout.fillWidth: true
 
                                 height: 40
-                                text: qsTr("5")
+
+                                text: dataModel.nAverages
+                                Binding {
+                                    target: dataModel
+                                    property: "nAverages"
+                                    value: nAveragingInput.integerValue
+                                }
+
                                 validator: IntValidator { locale: qsTr("en_US") }
-                                units: qsTr("")
                             }
 
                             // Delay Time
@@ -159,10 +194,18 @@ Item {
                                 text: qsTr("Delay Time")
                             }
                             CExtendedNumberInput {
+                                id: delayTimeInput
                                 Layout.fillWidth: true
 
                                 height: 40
-                                text: qsTr("2")
+
+                                inputValue: dataModel.delayTime
+                                Binding {
+                                    target: dataModel
+                                    property: "delayTime"
+                                    value: delayTimeInput.inputValue
+                                }
+
                                 validator: DoubleValidator { locale: qsTr("en_US") }
                                 units: qsTr("s")
                             }
@@ -182,11 +225,15 @@ Item {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             text: qsTr("Start")
+
+                            onClicked: root.startButtonClicked()
                         }
                         Button {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             text: qsTr("Stop")
+
+                            onClicked: root.stopButtonClicked()
                         }
                     }
                 }
