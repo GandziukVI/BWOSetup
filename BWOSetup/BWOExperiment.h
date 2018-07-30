@@ -11,7 +11,6 @@ class BWOExperiment : public IExperiment
 public:
     BWOExperiment(QObject *expSettings);
     void toDo(QObject *expSettings) override;
-    void stop() override;
     ~BWOExperiment() override;
 
 private:
