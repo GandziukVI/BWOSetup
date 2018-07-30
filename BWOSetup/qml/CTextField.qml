@@ -16,6 +16,9 @@ Rectangle {
 
     signal editingFinished()
 
+    property int integerValue: parseInt(input.text, 10)
+    property double doubleValue: parseFloat(input.text)
+
     TextField {
         id: input
         anchors.fill: parent
