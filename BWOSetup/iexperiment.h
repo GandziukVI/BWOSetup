@@ -28,7 +28,7 @@ private:
     QFuture<void>  mExpThreadRes;
 
 signals:
-    void StatusChanged(QString &stautusString);
+    void StatusChanged(QString &statusString);
     void ProgressChanged(double progressValue);
     void ExperimentStarted();
     void ExperimentFinished();
