@@ -42,6 +42,7 @@ void BWOExperiment::initializeHardware()
 
 
     // Configuration
+<<<<<<< HEAD
     DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
     DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
     DAQmxErrChk (DAQmxStartTask(hTaskInput));
@@ -49,6 +50,8 @@ void BWOExperiment::initializeHardware()
     DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
     DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO.c_str(), "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
     DAQmxErrChk (DAQmxStartTask(hTaskOutput));
+=======
+>>>>>>> f96e47ee914c498ecf5f00ab2f69bd68f5587bb7
 }
 
 void BWOExperiment::releaseHardware()
