@@ -29,9 +29,6 @@ private:
 private:
     void initializeHardware();
     void releaseHardware();
-
-public slots:
-    void onProgressChanged(double progress);
 };
 
 #endif // BWOEXPERIMENT_H

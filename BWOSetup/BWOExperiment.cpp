@@ -18,7 +18,6 @@ BWOExperiment::BWOExperiment()
 BWOExperiment::BWOExperiment(QObject *expSettings)
     : IExperiment (expSettings)
 {
-    QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);    
 }
 
 BWOExperiment::~BWOExperiment()
@@ -171,10 +170,4 @@ void BWOExperiment::toDo(QObject *expSettings)
     releaseHardware();
 
     qDebug() << "To do() function with arguments ended.";
-}
-
-void BWOExperiment::onProgressChanged(double progress)
-{
-
-    qDebug() << "Current progress is " << progress;
 }
