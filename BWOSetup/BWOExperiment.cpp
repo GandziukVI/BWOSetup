@@ -10,8 +10,6 @@
 // Values > 0 are warnings
 #define DAQmxErrChk(functionCall) if( DAQmxFailed(error=(functionCall)) ) throw error
 
-#include "qmlBackEnd/BWOExpModel.h"
-
 BWOExperiment::BWOExperiment()
     : IExperiment()
 {
@@ -29,13 +27,26 @@ BWOExperiment::BWOExperiment(QObject *expSettings)
 
 
     // Configuration
-    DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
-    DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI, "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
-    DAQmxErrChk (DAQmxStartTask(hTaskInput));
+    try
+    {
+        DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
+        DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI, "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
+        DAQmxErrChk (DAQmxStartTask(hTaskInput));
 
-    DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
-    DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO, "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
-    DAQmxErrChk (DAQmxStartTask(hTaskOutput));
+        DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
+        DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO, "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
+        DAQmxErrChk (DAQmxStartTask(hTaskOutput));
+    }
+    catch(int error)
+    {
+        Q_UNUSED(error)
+        DAQmxGetExtendedErrorInfo(errBuff,2048);
+        qDebug() << "DAQmx Error: " << errBuff << endl;
+    }
+    catch (...)
+    {
+        qDebug() << "Unknown exception caught in stop()\n";
+    }
 }
 
 BWOExperiment::~BWOExperiment()
@@ -93,11 +104,11 @@ void BWOExperiment::toDo(QObject *expSettings)
         qDebug() << "Start Volt " << lowestVoltage << " end volt " << hightesVoltage << " num points " << numberPoints;
 
         // Helpful variables in the algorythm
-        float64         average = 0;
-        float64         voltageReadValue = 0;
-        float64         frequencyWriteVoltage = 0;
+        float64     average = 0;
+        float64     voltageReadValue = 0;
+        float64     frequencyWriteVoltage = 0;
+        float64     delta = (hightesVoltage - lowestVoltage) / (numberPoints - 1);
 
-        float64 delta = (hightesVoltage - lowestVoltage) / (numberPoints - 1);
         for(int32 i = 0; i < numberPoints; i++)
         {
             if (mExperimentIsRunning) {
