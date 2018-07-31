@@ -39,9 +39,5 @@ int main(int argc, char **argv)
 
     viewer.show();
 
-    // For testing purpose
-    // see output in debug console
-
-
     return app.exec();
 }

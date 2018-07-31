@@ -8,7 +8,10 @@ BWOExpModel::BWOExpModel(QObject *parent)
       mNAverages(3),
       mDelayTime(0.5)
 {
+    mDeviceName = QString::fromLatin1("Dev1");
 
+    mPinAO = QString::fromLatin1("ao0");
+    mPinAI = QString::fromLatin1("ai3");
 }
 
 double BWOExpModel::startValue()
@@ -79,4 +82,46 @@ void BWOExpModel::setDelayTime(const double &value)
 
     mDelayTime = value;
     emit delayTimeChanged(mDelayTime);
+}
+
+QString BWOExpModel::niDeviceName()
+{
+    return mDeviceName;
+}
+
+void BWOExpModel::setNIDeviceName(const QString &value)
+{
+    if (value == mDeviceName)
+        return;
+
+    mDeviceName = value;
+    emit niDeviceNameChanged(mDeviceName);
+}
+
+QString BWOExpModel::pinAO()
+{
+    return mPinAO;
+}
+
+void BWOExpModel::setPinAO(const QString &value)
+{
+    if (value == mPinAO)
+        return;
+
+    mPinAO = value;
+    emit pinAOChanged(mPinAO);
+}
+
+QString BWOExpModel::pinAI()
+{
+    return mPinAI;
+}
+
+void BWOExpModel::setPinAI(const QString &value)
+{
+    if (value == mPinAI)
+        return;
+
+    mPinAI = value;
+    emit  pinAIChanged(mPinAI);
 }

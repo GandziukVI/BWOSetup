@@ -20,37 +20,48 @@ BWOExperiment::BWOExperiment()
 BWOExperiment::BWOExperiment(QObject *expSettings)
     : IExperiment (expSettings)
 {
-    QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);
+    QObject::connect(this, &BWOExperiment::ProgressChanged, this, &BWOExperiment::onProgressChanged);    
+}
+
+BWOExperiment::~BWOExperiment()
+{
+    stop();
+}
+
+void BWOExperiment::initializeHardware()
+{
+    BWOExpModel *model = qobject_cast<BWOExpModel*>(mExpSettings);
 
     // Concept of working with NI DAQmx: Create Task ->
     // -> Configurate its channel(s) -> Start Task ->
     // -> Write/Read/other actions with the channel(s) ->
     // -> Stop Task -> Clear Task
 
+    std::string PIN_AO = (model->niDeviceName() + QString::fromLatin1("/") + model->pinAO()).toStdString();
+    std::string PIN_AI = (model->niDeviceName() + QString::fromLatin1("/") + model->pinAI()).toStdString();
+
 
     // Configuration
     DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
-    DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI, "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
+    DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
     DAQmxErrChk (DAQmxStartTask(hTaskInput));
 
     DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
-    DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO, "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
+    DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO.c_str(), "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
     DAQmxErrChk (DAQmxStartTask(hTaskOutput));
 }
 
-BWOExperiment::~BWOExperiment()
+void BWOExperiment::releaseHardware()
 {
-    // To DO:
-    // Add voltage reset when experiment is finished: set to zero
-    // WHERE SHOULD THIS FUNCTION BE USED???
+    qDebug() << "Resetting voltage and celaning tasks...";
     try
     {
-        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput,false,4,0,NULL));
+        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, 4, 0, NULL));
     }
     catch(int error)
     {
         Q_UNUSED(error)
-        DAQmxGetExtendedErrorInfo(errBuff,2048);
+        DAQmxGetExtendedErrorInfo(errBuff, 2048);
         qDebug() << "DAQmx Error: " << errBuff << endl;
     }
     catch (...)
@@ -67,15 +78,15 @@ BWOExperiment::~BWOExperiment()
         DAQmxClearTask(hTaskOutput);
     }
     qDebug() << "Voltage was reset. Tasks are cleaned.";
-
-    stop();
 }
 
 void BWOExperiment::toDo(QObject *expSettings)
 {
-    qDebug() << "Entering TO DO method...";
-
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
+
+    qDebug() << "toDo function started...";
+
+    initializeHardware();
 
     // Sending signal that experiment has been started
     emit ExperimentStarted();
@@ -141,7 +152,12 @@ void BWOExperiment::toDo(QObject *expSettings)
     // emitting signal that experiment ended
     emit ExperimentFinished();
     mExperimentIsRunning = false;
-    qDebug() << "To do() function with arguments ended";
+
+    qDebug() << "Experiment is finished.";
+
+    releaseHardware();
+
+    qDebug() << "To do() function with arguments ended.";
 }
 
 void BWOExperiment::onProgressChanged(double progress)

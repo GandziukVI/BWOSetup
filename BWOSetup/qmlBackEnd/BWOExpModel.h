@@ -12,24 +12,36 @@ class BWOExpModel : public QObject
     Q_PROPERTY(int nDataPoints READ nDataPoints WRITE setNDataPoints NOTIFY nDataPointsChanged)
     Q_PROPERTY(int nAverages READ nAverages WRITE setNAverages NOTIFY nAveragesChanged)
     Q_PROPERTY(double delayTime READ delayTime WRITE setDelayTime NOTIFY delayTimeChanged)
+    Q_PROPERTY(QString niDeviceName READ niDeviceName WRITE setNIDeviceName NOTIFY niDeviceNameChanged)
+    Q_PROPERTY(QString pinAO READ pinAO WRITE setPinAO NOTIFY pinAOChanged)
+    Q_PROPERTY(QString pinAI READ pinAI WRITE setPinAI NOTIFY pinAIChanged)
 
 public:
     explicit BWOExpModel(QObject *parent = nullptr);
 
-    double startValue();
-    void   setStartValue(const double &value);
+    double  startValue();
+    void    setStartValue(const double &value);
 
-    double stopValue();
-    void   setStopValue(const double &value);
+    double  stopValue();
+    void    setStopValue(const double &value);
 
-    int    nDataPoints();
-    void   setNDataPoints(const int &value);
+    int     nDataPoints();
+    void    setNDataPoints(const int &value);
 
-    int    nAverages();
-    void   setNAverages(const int &value);
+    int     nAverages();
+    void    setNAverages(const int &value);
 
-    double delayTime();
-    void   setDelayTime(const double &value);
+    double  delayTime();
+    void    setDelayTime(const double &value);
+
+    QString niDeviceName();
+    void    setNIDeviceName(const QString &value);
+
+    QString pinAO();
+    void    setPinAO(const QString &value);
+
+    QString pinAI();
+    void    setPinAI(const QString &value);
 
 signals:
     void startValueChanged(const double&);
@@ -37,13 +49,19 @@ signals:
     void nDataPointsChanged(const int&);
     void nAveragesChanged(const int&);
     void delayTimeChanged(const double&);
+    void niDeviceNameChanged(const QString&);
+    void pinAOChanged(const QString&);
+    void pinAIChanged(const QString&);
 
 private:
-    double mStartValue;  // Either Voltage or Frequency
-    double mStopValue;   // Either Voltage or Frequency
-    int    mNDataPoints;
-    int    mNAverages;
-    double mDelayTime;   // Delay time in seconds
+    double  mStartValue;  // Either Voltage or Frequency
+    double  mStopValue;   // Either Voltage or Frequency
+    int     mNDataPoints;
+    int     mNAverages;
+    double  mDelayTime;   // Delay time in seconds
+    QString mDeviceName;
+    QString mPinAO;
+    QString mPinAI;
 };
 
 #endif // BWOEXPMODEL_H
