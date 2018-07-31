@@ -135,15 +135,15 @@ void BWOExperiment::toDo(QObject *expSettings)
                         average += voltageReadValue;
                         qDebug() << "Current read voltage value is " << voltageReadValue;
                         QThread::msleep(static_cast<unsigned long>(delayBetweenMeasurements * 1000.0));
+                        double progress = static_cast<double>(i * averageCycles + j) / numberPoints / averageCycles * 100.0;
+                        emit ProgressChanged(progress);
+                        model->setProgress(progress);
                     }
                     else
                         break;
                 }
                 average /= averageCycles;
                 qDebug() << "Averaged value is " << average;
-                double progress = static_cast<double>(i + 1) / static_cast<double>(numberPoints) * 100.0;
-                emit ProgressChanged(progress);
-                model->setProgress(progress);
             }
             else
                 break;
