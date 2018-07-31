@@ -47,6 +47,10 @@ public:
     double  progress();
     void    setProgress(const double &value);
 
+    // Public Methods
+    void addLineSeries(const QString &chartNameString);
+    void addDataPoint(const QPointF &dataPoint);
+
 signals:
     void startValueChanged(const double&);
     void stopValueChanged(const double&);
@@ -58,6 +62,9 @@ signals:
     void pinAIChanged(const QString&);
     void progressChanged(const double&);
 
+    void addNewLineSeries(const QString &chartNameString);
+    void addNewDataPoint(const QPointF &dataPoint);
+
 private:
     double  mStartValue;  // Either Voltage or Frequency
     double  mStopValue;   // Either Voltage or Frequency
@@ -68,6 +75,8 @@ private:
     QString mPinAO;
     QString mPinAI;
     double  mProgress;
+
+    QString mCurrentLineSeries;
 };
 
 #endif // BWOEXPMODEL_H

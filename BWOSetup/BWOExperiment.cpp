@@ -4,6 +4,7 @@
 // For debugging
 #include <QDebug>
 #include <QThread>
+#include <QPointF>
 
 // Current realization of the error detection
 // DAQmxFailer returns true when functionCall returns the value < 0
@@ -95,6 +96,8 @@ void BWOExperiment::toDo(QObject *expSettings)
 {
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
 
+    model->addLineSeries("BWO Line Series");
+
     qDebug() << "toDo function started...";
 
     initializeHardware();
@@ -143,6 +146,9 @@ void BWOExperiment::toDo(QObject *expSettings)
                         break;
                 }
                 average /= averageCycles;
+
+                model->addDataPoint(QPointF(frequencyWriteVoltage, average));
+
                 qDebug() << "Averaged value is " << average;
             }
             else

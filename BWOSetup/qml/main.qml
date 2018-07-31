@@ -21,6 +21,9 @@ Item {
     signal startButtonClicked()
     signal stopButtonClicked()
 
+    property variant measUnit: qsTr("Hz");
+    property variant measType: qsTr("Frequency, Hz")
+
     GridLayout {
         anchors.fill: parent
         anchors.margins: 10
@@ -33,6 +36,7 @@ Item {
 
             ChartView {
                 id: bwoChart
+                objectName: "bwoChart"
 
                 Layout.fillWidth: true
                 Layout.fillHeight: true
@@ -41,22 +45,44 @@ Item {
 
                 theme: ChartView.ChartThemeBlueCerulean
 
-                LineSeries {
-                    id: noiseFETLineGraph
+                ValueAxis {
+                    id: bwoChartXAxis
 
-                    axisX: ValueAxis {
-                        id: bwoXAxis
-                        min: 0.0
-                        max: 1.0
-                        titleText: qsTr("x Axis")
+                    min: dataModel.startValue
+                    max: dataModel.stopValue
+                }
+
+                ValueAxis {
+                    id: bwoChartYAxis
+
+                    min: 0
+                    max: 2
+                }
+
+                function createAxis(min, max) {
+                    // The following creates a ValueAxis object that can be then set as a x or y axis for a series
+                    return Qt.createQmlObject("import QtQuick 2.0; import QtCharts 2.0; ValueAxis { min: "
+                                              + min + "; max: " + max + " }", bwoChart);
+                }
+                function addLineSeries (seriesName) {
+                    bwoChartXAxis.titleText = root.measType
+                    bwoChartYAxis.titleText = qsTr("BWO System Response")
+
+                    var newSeries = bwoChart.createSeries(ChartView.SeriesTypeLine, seriesName, bwoChartXAxis, bwoChartYAxis);
+                    newSeries.useOpenGL = true;
+                }
+
+                Connections {
+                    target: dataModel
+                    onAddNewLineSeries: {
+                        bwoChart.addLineSeries(chartNameString);
                     }
+                }
 
-                    axisY: ValueAxis {
-                        id: bwoYAxis
-                        labelFormat: qsTr("%.3e")
-                        min: 0.0
-                        max: 1.0
-                        titleText: qsTr("BWO Y Axis")
+                Connections {
+                    target:  dataModel
+                    onAddNewDataPoint: {
+                        bwoChart.series(bwoChart.count - 1).append(dataPoint.x, dataPoint.y);
                     }
                 }
             }
@@ -94,8 +120,6 @@ Item {
         // BWO Settings
         Item {
             id: bwoMeasSettings
-
-            property variant measUnit: qsTr("Hz");
 
             Layout.preferredWidth: 400
             Layout.maximumWidth: 400
@@ -186,16 +210,22 @@ Item {
                                         checked: true
 
                                         onCheckedChanged: {
-                                            if (checked)
-                                                bwoMeasSettings.measUnit = qsTr("Hz")
+                                            if (checked) {
+                                                root.measUnit = qsTr("Hz");
+                                                root.measType = qsTr("Frequency, Hz");
+                                                bwoChart.update();
+                                            }
                                         }
                                     }
                                     RadioButton {
                                         text: qsTr("Voltage Steps")
 
                                         onCheckedChanged: {
-                                            if (checked)
-                                                bwoMeasSettings.measUnit = qsTr("V")
+                                            if (checked) {
+                                                root.measUnit = qsTr("V");
+                                                root.measType = qsTr("Voltage, V");
+                                                bwoChart.update();
+                                            }
                                         }
                                     }
                                 }
@@ -220,7 +250,7 @@ Item {
                                 }
 
                                 validator: DoubleValidator { locale: qsTr("en_US") }
-                                units: bwoMeasSettings.measUnit
+                                units: root.measUnit
                             }
 
                             // Stop Value
@@ -242,7 +272,7 @@ Item {
                                 }
 
                                 validator: DoubleValidator { locale: qsTr("en_US") }
-                                units: bwoMeasSettings.measUnit
+                                units: root.measUnit
                             }
 
                             // Nomber of Points

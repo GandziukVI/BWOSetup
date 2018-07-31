@@ -13,6 +13,8 @@ BWOExpModel::BWOExpModel(QObject *parent)
 
     mPinAO = QString::fromLatin1("ao0");
     mPinAI = QString::fromLatin1("ai3");
+
+    mCurrentLineSeries = QString::fromLatin1("BWO Experiment");
 }
 
 double BWOExpModel::startValue()
@@ -139,4 +141,14 @@ void BWOExpModel::setProgress(const double &value)
 
     mProgress = value;
     emit progressChanged(mProgress);
+}
+
+void BWOExpModel::addLineSeries(const QString &chartNameString)
+{
+    emit addNewLineSeries(chartNameString);
+}
+
+void BWOExpModel::addDataPoint(const QPointF &dataPoint)
+{
+    emit addNewDataPoint(dataPoint);
 }
