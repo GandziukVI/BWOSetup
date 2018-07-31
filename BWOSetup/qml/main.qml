@@ -61,26 +61,42 @@ Item {
                 }
             }
 
-            ProgressBar {
-                id: bwoExpProgress
-
+            RowLayout {
                 Layout.fillWidth: true
-                height: 20
 
-                from: 0.0
-                to: 100.0
+                Layout.topMargin: 2.5
+                Layout.bottomMargin: 2.5
+                Layout.leftMargin: 5
+                Layout.rightMargin: 5
 
-                value: dataModel.progress
-                Binding {
-                    target: dataModel
-                    property: "progress"
-                    value: bwoExpProgress.value
+                Label {
+                    text: qsTr("Progress:")
+                }
+
+                ProgressBar {
+                    id: bwoExpProgress
+
+                    Layout.fillWidth: true
+
+                    from: 0.0
+                    to: 100.0
+
+                    value: dataModel.progress
+                    Binding {
+                        target: dataModel
+                        property: "progress"
+                        value: bwoExpProgress.value
+                    }
                 }
             }
         }
 
         // BWO Settings
         Item {
+            id: bwoMeasSettings
+
+            property variant measUnit: qsTr("Hz");
+
             Layout.preferredWidth: 400
             Layout.maximumWidth: 400
 
@@ -168,9 +184,19 @@ Item {
                                     RadioButton {
                                         text: qsTr("Frequency Steps")
                                         checked: true
+
+                                        onCheckedChanged: {
+                                            if (checked)
+                                                bwoMeasSettings.measUnit = qsTr("Hz")
+                                        }
                                     }
                                     RadioButton {
                                         text: qsTr("Voltage Steps")
+
+                                        onCheckedChanged: {
+                                            if (checked)
+                                                bwoMeasSettings.measUnit = qsTr("V")
+                                        }
                                     }
                                 }
                             }
@@ -194,7 +220,7 @@ Item {
                                 }
 
                                 validator: DoubleValidator { locale: qsTr("en_US") }
-                                units: qsTr("")
+                                units: bwoMeasSettings.measUnit
                             }
 
                             // Stop Value
@@ -216,7 +242,7 @@ Item {
                                 }
 
                                 validator: DoubleValidator { locale: qsTr("en_US") }
-                                units: qsTr("")
+                                units: bwoMeasSettings.measUnit
                             }
 
                             // Nomber of Points
