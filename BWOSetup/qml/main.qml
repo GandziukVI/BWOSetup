@@ -27,32 +27,54 @@ Item {
         columns: 2
 
         // BWO Chart
-        ChartView {
-            id: bwoChart
-
+        ColumnLayout {
             Layout.fillWidth: true
             Layout.fillHeight: true
 
-            legend.visible: true
+            ChartView {
+                id: bwoChart
 
-            theme: ChartView.ChartThemeBlueCerulean
+                Layout.fillWidth: true
+                Layout.fillHeight: true
 
-            LineSeries {
-                id: noiseFETLineGraph
+                legend.visible: true
 
-                axisX: ValueAxis {
-                    id: bwoXAxis
-                    min: 0.0
-                    max: 1.0
-                    titleText: qsTr("x Axis")
+                theme: ChartView.ChartThemeBlueCerulean
+
+                LineSeries {
+                    id: noiseFETLineGraph
+
+                    axisX: ValueAxis {
+                        id: bwoXAxis
+                        min: 0.0
+                        max: 1.0
+                        titleText: qsTr("x Axis")
+                    }
+
+                    axisY: ValueAxis {
+                        id: bwoYAxis
+                        labelFormat: qsTr("%.3e")
+                        min: 0.0
+                        max: 1.0
+                        titleText: qsTr("BWO Y Axis")
+                    }
                 }
+            }
 
-                axisY: ValueAxis {
-                    id: bwoYAxis
-                    labelFormat: qsTr("%.3e")
-                    min: 0.0
-                    max: 1.0
-                    titleText: qsTr("BWO Y Axis")
+            ProgressBar {
+                id: bwoExpProgress
+
+                Layout.fillWidth: true
+                height: 20
+
+                from: 0.0
+                to: 100.0
+
+                value: dataModel.progress
+                Binding {
+                    target: dataModel
+                    property: "progress"
+                    value: bwoExpProgress.value
                 }
             }
         }
@@ -83,6 +105,57 @@ Item {
                             height: children.height
 
                             columns: 2
+
+                            // NI SDA Device Name
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Device Name")
+                            }
+                            CTextField {
+                                id: niDeviceNameInput
+                                Layout.fillWidth: true
+                                height: 40
+                                text: dataModel.niDeviceName
+                                Binding {
+                                    target: dataModel
+                                    property: "niDeviceName"
+                                    value: niDeviceNameInput.text
+                                }
+                            }
+
+                            // NI SDA Output Channel
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Analog Output Name")
+                            }
+                            CTextField {
+                                id: niAOInput
+                                Layout.fillWidth: true
+                                height: 40
+                                text: dataModel.pinAO
+                                Binding {
+                                    target: dataModel
+                                    property: "pinAO"
+                                    value: niAOInput.text
+                                }
+                            }
+
+                            // NI SDA Input Channel
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Analog Input Name")
+                            }
+                            CTextField {
+                                id: niAIInput
+                                Layout.fillWidth: true
+                                height: 40
+                                text: dataModel.pinAI
+                                Binding {
+                                    target: dataModel
+                                    property: "pinAI"
+                                    value: niAIInput.text
+                                }
+                            }
 
                             // Measurement Mode: Frequency or Voltage
                             GroupBox {

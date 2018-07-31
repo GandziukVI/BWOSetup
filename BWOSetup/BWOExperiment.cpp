@@ -38,25 +38,16 @@ void BWOExperiment::initializeHardware()
     std::string PIN_AO = (model->niDeviceName() + QString::fromLatin1("/") + model->pinAO()).toStdString();
     std::string PIN_AI = (model->niDeviceName() + QString::fromLatin1("/") + model->pinAI()).toStdString();
 
-
     // Configuration
-<<<<<<< HEAD
-    DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
-    DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
-    DAQmxErrChk (DAQmxStartTask(hTaskInput));
 
-    DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
-    DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO.c_str(), "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
-    DAQmxErrChk (DAQmxStartTask(hTaskOutput));
-=======
     try
     {
         DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
-        DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI, "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
+        DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
         DAQmxErrChk (DAQmxStartTask(hTaskInput));
 
         DAQmxErrChk (DAQmxCreateTask("Output Voltage Task", &hTaskOutput));
-        DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO, "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
+        DAQmxErrChk (DAQmxCreateAOVoltageChan(hTaskOutput, PIN_AO.c_str(), "", MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, ""));
         DAQmxErrChk (DAQmxStartTask(hTaskOutput));
     }
     catch(int error)
@@ -69,7 +60,7 @@ void BWOExperiment::initializeHardware()
     {
         qDebug() << "Unknown exception caught in stop()\n";
     }
->>>>>>> f96e47ee914c498ecf5f00ab2f69bd68f5587bb7
+
 }
 
 void BWOExperiment::releaseHardware()
@@ -153,6 +144,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                 qDebug() << "Averaged value is " << average;
                 double progress = static_cast<double>(i + 1) / static_cast<double>(numberPoints) * 100.0;
                 emit ProgressChanged(progress);
+                model->setProgress(progress);
             }
             else
                 break;
@@ -183,5 +175,6 @@ void BWOExperiment::toDo(QObject *expSettings)
 
 void BWOExperiment::onProgressChanged(double progress)
 {
+
     qDebug() << "Current progress is " << progress;
 }

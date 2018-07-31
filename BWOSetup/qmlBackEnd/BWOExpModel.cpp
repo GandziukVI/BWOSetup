@@ -6,7 +6,8 @@ BWOExpModel::BWOExpModel(QObject *parent)
       mStopValue(3),
       mNDataPoints(7),
       mNAverages(3),
-      mDelayTime(0.5)
+      mDelayTime(0.5),
+      mProgress(0.0)
 {
     mDeviceName = QString::fromLatin1("Dev1");
 
@@ -124,4 +125,18 @@ void BWOExpModel::setPinAI(const QString &value)
 
     mPinAI = value;
     emit  pinAIChanged(mPinAI);
+}
+
+double BWOExpModel::progress()
+{
+    return mProgress;
+}
+
+void BWOExpModel::setProgress(const double &value)
+{
+    if (value == mProgress)
+        return;
+
+    mProgress = value;
+    emit progressChanged(mProgress);
 }

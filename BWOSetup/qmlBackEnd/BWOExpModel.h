@@ -15,6 +15,7 @@ class BWOExpModel : public QObject
     Q_PROPERTY(QString niDeviceName READ niDeviceName WRITE setNIDeviceName NOTIFY niDeviceNameChanged)
     Q_PROPERTY(QString pinAO READ pinAO WRITE setPinAO NOTIFY pinAOChanged)
     Q_PROPERTY(QString pinAI READ pinAI WRITE setPinAI NOTIFY pinAIChanged)
+    Q_PROPERTY(double progress READ progress WRITE setProgress NOTIFY progressChanged)
 
 public:
     explicit BWOExpModel(QObject *parent = nullptr);
@@ -43,6 +44,9 @@ public:
     QString pinAI();
     void    setPinAI(const QString &value);
 
+    double  progress();
+    void    setProgress(const double &value);
+
 signals:
     void startValueChanged(const double&);
     void stopValueChanged(const double&);
@@ -52,6 +56,7 @@ signals:
     void niDeviceNameChanged(const QString&);
     void pinAOChanged(const QString&);
     void pinAIChanged(const QString&);
+    void progressChanged(const double&);
 
 private:
     double  mStartValue;  // Either Voltage or Frequency
@@ -62,6 +67,7 @@ private:
     QString mDeviceName;
     QString mPinAO;
     QString mPinAI;
+    double  mProgress;
 };
 
 #endif // BWOEXPMODEL_H
