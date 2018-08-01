@@ -2,16 +2,14 @@
 #define BWOEXPERIMENT_H
 
 #include "IExperiment.h"
-
-// Working with NI DAQmx
-#include <NIDAQmx.h>
+#include <NIDAQmx.h>        // Working with NI DAQmx
 
 class BWOExperiment : public IExperiment
 {
 public:
     BWOExperiment(QObject *expSettings);
     void toDo(QObject *expSettings) override;
-    ~BWOExperiment() override;
+    ~BWOExperiment() override;                  // ?? What should we override? Should we make the IExp destructor virtual then?
 
 private:
     BWOExperiment();
@@ -20,8 +18,8 @@ private:
     const float64   MIN_VOLTAGE_VALUE = 0.0;    // Probably we need to use another ranges for the input range (Single-ended ±10 V in specifications to USB-6008)
     const float64   TIMEOUT = 4.0;              // Waiting time for one read/write action in seconds
 
-    int32       error=0;
-    char        errBuff[2048]={'\0'};
+    int32       error = 0;
+    char        errBuff[2048] = {'\0'};
 
     TaskHandle  hTaskInput = nullptr;
     TaskHandle  hTaskOutput = nullptr;
