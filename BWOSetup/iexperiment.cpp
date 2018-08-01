@@ -30,9 +30,10 @@ void IExperiment::start()
 
 void IExperiment::stop()
 {
-    while (mExpThreadRes.isRunning()) {
+    mExperimentIsRunning = false;
+    QThread::msleep(2000);                  // give time to get out of the toDo method
+    while (mExpThreadRes.isRunning()) {     // otherwise, force termination
         mExpThreadRes.cancel();
         mExpThreadRes.waitForFinished();
     }
-    mExperimentIsRunning = false;
 }
