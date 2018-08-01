@@ -1,10 +1,11 @@
 #include "BWOExperiment.h"
 #include "qmlBackEnd/BWOExpModel.h"
 
-// For debugging
-#include <QDebug>
+#include <QDebug>   // provides an output stream for debugging information
 #include <QThread>
-#include <QPointF>
+#include <QPointF>  // defines a point in the plane using
+#include <QTime>    // only for different legend titles
+#include <QString>  // --||--
 
 // Current realization of the error detection
 // DAQmxFailer returns true when functionCall returns the value < 0
@@ -23,7 +24,7 @@ BWOExperiment::BWOExperiment(QObject *expSettings)
 
 BWOExperiment::~BWOExperiment()
 {
-    stop();
+    stop();     // probably, we do not need it because ~IExperiment does the same (IExperiment::~IExperiment()). TO DO: Delete it.
 }
 
 void BWOExperiment::initializeHardware()
@@ -39,9 +40,9 @@ void BWOExperiment::initializeHardware()
     std::string PIN_AI = (model->niDeviceName() + QString::fromLatin1("/") + model->pinAI()).toStdString();
 
     // Configuration
-
     try
     {
+        // TO DO: check the datasheet to detector-LockIn - what output values it produces, perhaps, must change the range
         DAQmxErrChk (DAQmxCreateTask("Input Voltage Task", &hTaskInput));
         DAQmxErrChk (DAQmxCreateAIVoltageChan(hTaskInput, PIN_AI.c_str(), "", DAQmx_Val_Cfg_Default, MIN_VOLTAGE_VALUE, MAX_VOLTAGE_VALUE, DAQmx_Val_Volts, NULL));
         DAQmxErrChk (DAQmxStartTask(hTaskInput));
@@ -52,29 +53,26 @@ void BWOExperiment::initializeHardware()
     }
     catch(int error)
     {
-        Q_UNUSED(error)
         DAQmxGetExtendedErrorInfo(errBuff,2048);
-        qDebug() << "DAQmx Error: " << errBuff << endl;
+        qDebug() << "DAQmx Error " << error << ":" << errBuff << endl;
     }
     catch (...)
     {
         qDebug() << "Unknown exception caught in stop()\n";
     }
-
 }
 
 void BWOExperiment::releaseHardware()
 {
-    qDebug() << "Resetting voltage and celaning tasks...";
+    qDebug() << "Resetting voltage and cleaning tasks...";
     try
     {
-        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, 4, 0, NULL));
+        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, TIMEOUT, 0, NULL));
     }
     catch(int error)
     {
-        Q_UNUSED(error)
-        DAQmxGetExtendedErrorInfo(errBuff, 2048);
-        qDebug() << "DAQmx Error: " << errBuff << endl;
+        DAQmxGetExtendedErrorInfo(errBuff,2048);
+        qDebug() << "DAQmx Error " << error << ":" << errBuff << endl;
     }
     catch (...)
     {
@@ -95,20 +93,15 @@ void BWOExperiment::releaseHardware()
 void BWOExperiment::toDo(QObject *expSettings)
 {
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
-
-    model->addLineSeries("BWO Line Series");
-
-    qDebug() << "toDo function started...";
+    QTime currentTime = QTime::currentTime();
+    // TO DO: line titles should have temperature values
+    model->addLineSeries("BWO Line Series" + QString::number(currentTime.minute()) + ":" + QString::number(currentTime.second()));
 
     initializeHardware();
-
-    // Sending signal that experiment has been started
     emit ExperimentStarted();
     mExperimentIsRunning = true;
     try
     {
-        // TO DO:
-        // Get this information from the Window
         float64   lowestVoltage = model->startValue();
         float64   hightesVoltage = model->stopValue();
         int32     numberPoints = model->nDataPoints();
@@ -157,10 +150,8 @@ void BWOExperiment::toDo(QObject *expSettings)
     }
     catch(int error)
     {
-        Q_UNUSED(error)
-
         DAQmxGetExtendedErrorInfo(errBuff,2048);
-        qDebug() << "DAQmx Error: " << errBuff << endl;
+        qDebug() << "DAQmx Error " << error << ":" << errBuff << endl;
     }
     catch (...)
     {
@@ -174,6 +165,4 @@ void BWOExperiment::toDo(QObject *expSettings)
     qDebug() << "Experiment is finished.";
 
     releaseHardware();
-
-    qDebug() << "To do() function with arguments ended.";
 }
