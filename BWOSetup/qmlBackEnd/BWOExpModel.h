@@ -7,6 +7,12 @@ class BWOExpModel : public QObject
 {
     Q_OBJECT
 
+    // To declare a property, use the Q_PROPERTY() macro in a class that inherits QObject.
+    // A READ accessor function is for reading the property value
+    // A WRITE accessor function is for setting the property value. It must return void and must take exactly one argument
+    // A NOTIFY signal should specify one existing signal in that class that is emitted whenever the value of the property changes.
+    // The parameter will take the new value of the property.
+    // The NOTIFY signal should only be emitted when the property has really been changed
     Q_PROPERTY(double startValue READ startValue WRITE setStartValue NOTIFY startValueChanged)
     Q_PROPERTY(double stopValue READ stopValue WRITE setStopValue NOTIFY stopValueChanged)
     Q_PROPERTY(int nDataPoints READ nDataPoints WRITE setNDataPoints NOTIFY nDataPointsChanged)
