@@ -12,7 +12,7 @@ int main(int argc, char **argv)
 {
     QCoreApplication::setAttribute(Qt::AA_EnableHighDpiScaling);    // attributes that change the behavior of application-wide features
                                                                     // Enables high-DPI scaling in Qt on supported platforms
-    QApplication app(argc, argv);   // manages the GUI application's control flow and main settings
+    QApplication app(argc, argv);   // manages the GUI application's control flow and main settings, init application
 
     // Attaching QML back-end
 
@@ -45,5 +45,5 @@ int main(int argc, char **argv)
 
     viewer.show();
 
-    return app.exec();
+    return app.exec();  // execute event loop
 }
