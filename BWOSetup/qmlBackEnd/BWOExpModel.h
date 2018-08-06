@@ -22,6 +22,8 @@ class BWOExpModel : public QObject
     Q_PROPERTY(QString pinAO READ pinAO WRITE setPinAO NOTIFY pinAOChanged)
     Q_PROPERTY(QString pinAI READ pinAI WRITE setPinAI NOTIFY pinAIChanged)
     Q_PROPERTY(double progress READ progress WRITE setProgress NOTIFY progressChanged)
+    Q_PROPERTY(double alphaCoefficient READ alphaCoefficient WRITE setAlphaCoefficient NOTIFY alphaCoefficientChanged)
+    Q_PROPERTY(double betaCoefficient READ betaCoefficient WRITE setBetaCoefficient NOTIFY betaCoefficientChanged)
 
 public:
     explicit BWOExpModel(QObject *parent = nullptr);
@@ -50,6 +52,12 @@ public:
     QString pinAI();
     void    setPinAI(const QString &value);
 
+    double  alphaCoefficient();
+    void    setAlphaCoefficient(const double &value);
+
+    double  betaCoefficient();
+    void    setBetaCoefficient(const double &value);
+
     double  progress();
     void    setProgress(const double &value);
 
@@ -66,6 +74,8 @@ signals:
     void niDeviceNameChanged(const QString&);
     void pinAOChanged(const QString&);
     void pinAIChanged(const QString&);
+    void alphaCoefficientChanged(const double&);
+    void betaCoefficientChanged(const double&);
     void progressChanged(const double&);
 
     void addNewLineSeries(const QString &chartNameString);
@@ -81,6 +91,8 @@ private:
     QString mPinAO;
     QString mPinAI;
     double  mProgress;
+    double  mAlphaCoefficient;
+    double  mBetaCoefficient;
 
     QString mCurrentLineSeries;
 };

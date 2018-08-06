@@ -7,7 +7,9 @@ BWOExpModel::BWOExpModel(QObject *parent)
       mNDataPoints(7),
       mNAverages(3),
       mDelayTime(0.5),
-      mProgress(0.0)
+      mProgress(0.0),
+      mAlphaCoefficient(1.0),
+      mBetaCoefficient(1.0)
 {
     mDeviceName = QString::fromLatin1("Dev1");
 
@@ -127,6 +129,34 @@ void BWOExpModel::setPinAI(const QString &value)
 
     mPinAI = value;
     emit  pinAIChanged(mPinAI);
+}
+
+double BWOExpModel::alphaCoefficient()
+{
+    return mAlphaCoefficient;
+}
+
+void BWOExpModel::setAlphaCoefficient(const double &value)
+{
+    if (value == mAlphaCoefficient)
+        return;
+
+    mAlphaCoefficient = value;
+    emit alphaCoefficientChanged(mAlphaCoefficient);
+}
+
+double BWOExpModel::betaCoefficient()
+{
+    return mBetaCoefficient;
+}
+
+void BWOExpModel::setBetaCoefficient(const double &value)
+{
+    if (value == mBetaCoefficient)
+        return;
+
+    mBetaCoefficient = value;
+    emit betaCoefficientChanged(mBetaCoefficient);
 }
 
 double BWOExpModel::progress()

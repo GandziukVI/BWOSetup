@@ -197,6 +197,39 @@ Item {
                                 }
                             }
 
+                            // BWO lamp coefficients
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("BWO coefficient alpha")
+                            }
+                            CTextField {
+                                id: alphaCoefficient
+                                Layout.fillWidth: true
+                                height: 40
+                                text: dataModel.alphaCoefficient
+                                Binding {
+                                    target: dataModel
+                                    property: "alphaCoefficient"
+                                    value: alphaCoefficient.text
+                                }
+                            }
+
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("BWO coefficient beta")
+                            }
+                            CTextField {
+                                id: betaCoefficient
+                                Layout.fillWidth: true
+                                height: 40
+                                text: dataModel.betaCoefficient
+                                Binding {
+                                    target: dataModel
+                                    property: "betaCoefficient"
+                                    value: betaCoefficient.text
+                                }
+                            }
+
                             // Measurement Mode: Frequency or Voltage
                             GroupBox {
                                 Layout.columnSpan: 2
