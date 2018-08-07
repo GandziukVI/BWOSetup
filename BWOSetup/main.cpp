@@ -18,7 +18,6 @@ int main(int argc, char **argv)
 
     qmlRegisterType<BWOExpModel>("BWOModel", 1, 0, "BWOExpModel");  // registers the C++ type in the QML system with the BWOExpModel name in the
                                                                     // library imported from BWOModel 1.0; which registers the type T=BWOExpModel as a new type
-
     BWOExpModel dataModel;
     BWOExperiment bwoExperiment(&dataModel);
 

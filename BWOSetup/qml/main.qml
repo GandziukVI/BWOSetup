@@ -377,25 +377,32 @@ Item {
 
                 // Start / Stop buttons
                 Item {
+                    id: startStopItem
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.maximumHeight: 40
-
+                    property variant enabledState: true
                     RowLayout {
                         anchors.fill: parent
                         Button {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             text: qsTr("Start")
-
-                            onClicked: root.startButtonClicked()
+                            enabled: startStopItem.enabledState
+                            onClicked: {
+                                root.startButtonClicked();
+                                startStopItem.enabledState = !startStopItem.enabledState;
+                            }
                         }
                         Button {
                             Layout.fillWidth: true
                             Layout.fillHeight: true
                             text: qsTr("Stop")
-
-                            onClicked: root.stopButtonClicked()
+                            enabled: !startStopItem.enabledState
+                            onClicked: {
+                                root.stopButtonClicked()
+                                startStopItem.enabledState = !startStopItem.enabledState;
+                            }
                         }
                     }
                 }
