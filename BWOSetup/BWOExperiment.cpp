@@ -6,6 +6,8 @@
 #include <QPointF>  // defines a point in the plane using
 #include <QTime>    // only for different legend titles
 #include <QString>  // --||--
+#include <QTextStream>
+#include <QFile>
 
 // Current realization of the error detection
 // DAQmxFailer returns true when functionCall returns the value < 0
@@ -24,7 +26,13 @@ BWOExperiment::BWOExperiment(QObject *expSettings)
 
 BWOExperiment::~BWOExperiment()
 {
-    stop();     // probably, we do not need it because ~IExperiment does the same (IExperiment::~IExperiment()). TO DO: Delete it.
+}
+
+void BWOExperiment::stop()
+{
+    dataFile->close();
+    QThread::msleep(100);
+    IExperiment::stop();
 }
 
 void BWOExperiment::initializeHardware()
@@ -96,12 +104,18 @@ void BWOExperiment::toDo(QObject *expSettings)
     QTime currentTime = QTime::currentTime();
     // TO DO: line titles should have temperature values
     model->addLineSeries("BWO Line Series" + QString::number(currentTime.minute()) + ":" + QString::number(currentTime.second()));
+    dataFile = new QFile("BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second()) + ".txt");
+    // TO DO: connect the dataFile to the QML model
 
     initializeHardware();
     emit ExperimentStarted();
     mExperimentIsRunning = true;
     try
     {
+        if (!dataFile->open(QFile::WriteOnly)) throw dataFile->error();
+        QTextStream out(dataFile);
+        out << qSetFieldWidth(14) << right;
+
         float64   lowestVoltage = model->startValue();
         float64   hightesVoltage = model->stopValue();
         int32     numberPoints = model->nDataPoints();
@@ -140,6 +154,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                 }
                 average /= averageCycles;
 
+                out << frequencyWriteVoltage << average << endl;
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));
 
                 qDebug() << "Averaged value is " << average;
@@ -153,6 +168,11 @@ void BWOExperiment::toDo(QObject *expSettings)
         DAQmxGetExtendedErrorInfo(errBuff,2048);
         qDebug() << "DAQmx Error " << error << ":" << errBuff << endl;
     }
+    catch(QFile::FileError error)
+    {
+        Q_UNUSED(error)
+        qDebug() << "Problem with file opening";
+    }
     catch (...)
     {
         qDebug() << "Unknown exception caught\n";
@@ -161,7 +181,7 @@ void BWOExperiment::toDo(QObject *expSettings)
     // emitting signal that experiment ended
     emit ExperimentFinished();
     mExperimentIsRunning = false;
-
+    dataFile->close();
     qDebug() << "Experiment is finished.";
 
     releaseHardware();

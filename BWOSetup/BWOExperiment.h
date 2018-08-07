@@ -3,6 +3,7 @@
 
 #include "IExperiment.h"
 #include <NIDAQmx.h>        // Working with NI DAQmx
+#include <QFile>
 
 class BWOExperiment : public IExperiment
 {
@@ -10,6 +11,7 @@ public:
     BWOExperiment(QObject *expSettings);
     void toDo(QObject *expSettings) override;
     ~BWOExperiment() override;                  // ?? What should we override? Should we make the IExp destructor virtual then?
+    void stop() override;
 
 private:
     BWOExperiment();
@@ -23,6 +25,8 @@ private:
 
     TaskHandle  hTaskInput = nullptr;
     TaskHandle  hTaskOutput = nullptr;
+
+    QFile       *dataFile;
 
 private:
     void initializeHardware();
