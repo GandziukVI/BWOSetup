@@ -8,6 +8,7 @@
 #include <QString>  // --||--
 #include <QTextStream>
 #include <QFile>
+#include <cmath>
 
 // Current realization of the error detection
 // DAQmxFailer returns true when functionCall returns the value < 0
@@ -103,7 +104,7 @@ void BWOExperiment::toDo(QObject *expSettings)
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
     QTime currentTime = QTime::currentTime();
     // TO DO: line titles should have temperature values
-    model->addLineSeries("BWO Line Series" + QString::number(currentTime.minute()) + ":" + QString::number(currentTime.second()));
+    model->addLineSeries("BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second()));
     dataFile = new QFile("BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second()) + ".txt");
     // TO DO: connect the dataFile to the QML model
 
@@ -114,13 +115,15 @@ void BWOExperiment::toDo(QObject *expSettings)
     {
         if (!dataFile->open(QFile::WriteOnly)) throw dataFile->error();
         QTextStream out(dataFile);
-        out << qSetFieldWidth(14) << right;
+        out << "V_NI (V)\tV_cat (V)\tf (GHz)\tV_det (V)\tV_detc (V)\tT (K)" << endl;
 
         float64   lowestVoltage = model->startValue();
         float64   hightesVoltage = model->stopValue();
         int32     numberPoints = model->nDataPoints();
         int32     averageCycles = model->nAverages();
         double    delayBetweenMeasurements = model->delayTime();
+        double    alphaCoefficient = model->alphaCoefficient();
+        double    betaCoefficient = model->betaCoefficient();
 
         qDebug() << "Start Volt " << lowestVoltage << " end volt " << hightesVoltage << " num points " << numberPoints;
 
@@ -154,7 +157,11 @@ void BWOExperiment::toDo(QObject *expSettings)
                 }
                 average /= averageCycles;
 
-                out << frequencyWriteVoltage << average << endl;
+                out << frequencyWriteVoltage << "\t" <<
+                       frequencyWriteVoltage * 600 << "\t" <<
+                       sqrt(frequencyWriteVoltage * 600) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * 600)) << "\t" <<
+                       average << "\t" <<
+                       0 << "\t" << 0 << endl;
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));
 
                 qDebug() << "Averaged value is " << average;

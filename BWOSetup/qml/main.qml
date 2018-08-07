@@ -382,6 +382,7 @@ Item {
                     Layout.fillHeight: true
                     Layout.maximumHeight: 40
                     property variant enabledState: true
+
                     RowLayout {
                         anchors.fill: parent
                         Button {
