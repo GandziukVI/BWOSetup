@@ -20,6 +20,7 @@ Item {
 
     signal startButtonClicked()
     signal stopButtonClicked()
+    signal openFolderClicked()
 
     property variant measUnit: qsTr("Hz");
     property variant measType: qsTr("Frequency, Hz")
@@ -200,7 +201,7 @@ Item {
                             // BWO lamp coefficients
                             Label {
                                 Layout.margins: 2.5
-                                text: qsTr("BWO coefficient alpha")
+                                text: qsTr("BWO coefficient alpha [V^1/2 / Hz]")
                             }
                             CTextField {
                                 id: alphaCoefficient
@@ -216,7 +217,7 @@ Item {
 
                             Label {
                                 Layout.margins: 2.5
-                                text: qsTr("BWO coefficient beta")
+                                text: qsTr("BWO coefficient beta  [Hz^-1]")
                             }
                             CTextField {
                                 id: betaCoefficient
@@ -371,6 +372,36 @@ Item {
                                 validator: DoubleValidator { locale: qsTr("en_US") }
                                 units: qsTr("s")
                             }
+
+                            // File Name
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Filename")
+                            }
+                            GridLayout {
+                                width: bwoSettings.width
+                                height: 40
+
+                                columns: 2
+                                CTextField{
+                                    id: fileName
+                                    Layout.fillWidth: true
+                                    height: 40
+                                    placeholderText : "default"
+                                    Binding {
+                                        target: dataModel
+                                        property: "fileName"
+                                        value: fileName.text
+                                    }
+                                }
+                                Button {
+                                    Layout.fillWidth: false
+                                    implicitWidth: 75
+                                    height: 40
+                                    text: qsTr("...")
+                                    onClicked: root.openFolderClicked();
+                                }
+                            }
                         }
                     }
                 }
@@ -381,7 +412,7 @@ Item {
                     Layout.fillWidth: true
                     Layout.fillHeight: true
                     Layout.maximumHeight: 40
-                    property variant enabledState: true
+                    property bool enabledState: true
 
                     RowLayout {
                         anchors.fill: parent

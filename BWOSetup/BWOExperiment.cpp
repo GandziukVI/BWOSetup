@@ -9,6 +9,7 @@
 #include <QTextStream>
 #include <QFile>
 #include <cmath>
+#include <QFileDialog>
 
 // Current realization of the error detection
 // DAQmxFailer returns true when functionCall returns the value < 0
@@ -23,6 +24,7 @@ BWOExperiment::BWOExperiment()
 BWOExperiment::BWOExperiment(QObject *expSettings)
     : IExperiment (expSettings)
 {
+    folderPath = "";
 }
 
 BWOExperiment::~BWOExperiment()
@@ -104,9 +106,9 @@ void BWOExperiment::toDo(QObject *expSettings)
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
     QTime currentTime = QTime::currentTime();
     // TO DO: line titles should have temperature values
-    model->addLineSeries("BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second()));
-    dataFile = new QFile("BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second()) + ".txt");
-    // TO DO: connect the dataFile to the QML model
+    QString title = "BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second());
+    model->addLineSeries(title);
+    dataFile = new QFile((folderPath != ""?(folderPath + "/"):"") + (model->fileName()!=""?model->fileName():title) + ".dat");
 
     initializeHardware();
     emit ExperimentStarted();
@@ -192,4 +194,14 @@ void BWOExperiment::toDo(QObject *expSettings)
     qDebug() << "Experiment is finished.";
 
     releaseHardware();
+}
+
+void BWOExperiment::openFolder()    // realization is not okay, should be changed if needed
+{
+    QWidget *temp = new QWidget();
+    folderPath = QFileDialog::getExistingDirectory(temp, tr("Open Directory"),
+                                                 "/home",
+                                                 QFileDialog::ShowDirsOnly
+                                                 | QFileDialog::DontResolveSymlinks);
+    delete temp;
 }

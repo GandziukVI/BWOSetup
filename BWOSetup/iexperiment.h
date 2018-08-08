@@ -22,6 +22,7 @@ public:
 public slots:                                       // Slots those should react on signals/other action to run and stop the exp.
     virtual void start();
     virtual void stop();
+    virtual void openFolder() = 0;                      // Cannot connect signal without this. Should be changed.
 
 protected:
     bool    mExperimentIsRunning;

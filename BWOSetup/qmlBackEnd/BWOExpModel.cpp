@@ -131,6 +131,20 @@ void BWOExpModel::setPinAI(const QString &value)
     emit  pinAIChanged(mPinAI);
 }
 
+QString BWOExpModel::fileName()
+{
+    return mFileName;
+}
+
+void BWOExpModel::setFileName(const QString &value)
+{
+    if (value == mFileName)
+        return;
+
+    mFileName = value;
+    emit  fileNameChanged(mFileName);
+}
+
 double BWOExpModel::alphaCoefficient()
 {
     return mAlphaCoefficient;
