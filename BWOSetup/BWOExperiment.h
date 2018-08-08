@@ -13,7 +13,6 @@ public:
     void toDo(QObject *expSettings) override;
     ~BWOExperiment() override;                  // ?? What should we override? Should we make the IExp destructor virtual then?
     void stop() override;
-    void openFolder();
 
 private:
     BWOExperiment();
@@ -29,7 +28,6 @@ private:
     TaskHandle  hTaskOutput = nullptr;
 
     QFile       *dataFile;
-    QString     folderPath;
 
 private:
     void initializeHardware();

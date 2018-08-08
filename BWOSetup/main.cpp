@@ -41,7 +41,6 @@ int main(int argc, char **argv)
 
     QObject::connect(item, SIGNAL(startButtonClicked()), &bwoExperiment, SLOT(start()));
     QObject::connect(item, SIGNAL(stopButtonClicked()), &bwoExperiment, SLOT(stop()));
-    QObject::connect(item, SIGNAL(openFolderClicked()), &bwoExperiment, SLOT(openFolder()));
 
     viewer.show();
 
