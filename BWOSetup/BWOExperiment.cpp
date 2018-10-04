@@ -22,13 +22,15 @@ BWOExperiment::BWOExperiment()
 }
 
 BWOExperiment::BWOExperiment(QObject *expSettings)
-    : IExperiment (expSettings)
+    : IExperiment (expSettings),
+      dataFile(nullptr)
 {
-    folderPath = "";
 }
 
 BWOExperiment::~BWOExperiment()
 {
+    if (dataFile != nullptr)
+        delete dataFile;
 }
 
 void BWOExperiment::stop()
@@ -110,7 +112,8 @@ void BWOExperiment::toDo(QObject *expSettings)
     // TO DO: line titles should have temperature values
     QString title = "BWO Line Series" + QString::number(currentTime.minute()) + "-" + QString::number(currentTime.second());
     model->addLineSeries(title);
-    dataFile = new QFile((folderPath != ""?(folderPath + "/"):"") + (model->fileName()!=""?model->fileName():title) + ".dat");
+
+    dataFile = new QFile(model->filePath() + "/" + model->fileName());
 
     initializeHardware();
     emit ExperimentStarted();

@@ -4,6 +4,8 @@ import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtCharts 2.2
 
+import Qt.labs.platform 1.0
+
 import BWOModel 1.0
 
 Item {
@@ -436,15 +438,30 @@ Item {
                                 text: qsTr("Filename")
                             }
                             GridLayout {
-                                width: bwoSettings.width
+                                Layout.fillWidth: true
                                 height: 40
-
                                 columns: 2
+
+                                FolderDialog {
+                                    id: bwoFolderBrowserDialog
+                                    title: qsTr("Open data folder...")
+
+                                    onAccepted: {
+                                        var path = folder.toString();
+                                        // remove prefixed "file:///"
+                                        path = path.replace(/^(file:\/{3})|(qrc:\/{2})|(http:\/{2})/,"");
+                                        // unescape html codes like '%23' for '#'
+                                        var cleanPath = decodeURIComponent(path);
+
+                                        dataModel.filePath = cleanPath;
+                                    }
+                                }
+
                                 CTextField{
                                     id: fileName
                                     Layout.fillWidth: true
                                     height: 40
-                                    placeholderText : "default"
+                                    placeholderText : "File name"
                                     Binding {
                                         target: dataModel
                                         property: "fileName"
@@ -456,7 +473,9 @@ Item {
                                     implicitWidth: 75
                                     height: 40
                                     text: qsTr("...")
-                                    onClicked: root.openFolderClicked();
+                                    onClicked: {
+                                        bwoFolderBrowserDialog.open();
+                                    }
                                 }
                             }
                         }

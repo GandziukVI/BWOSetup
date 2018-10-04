@@ -18,6 +18,9 @@ BWOExpModel::BWOExpModel(QObject *parent)
     mPinAI = QString::fromLatin1("ai3");
 
     mCurrentLineSeries = QString::fromLatin1("BWO Experiment");
+
+    mFileName = QString::fromLatin1("BWO Data #00.dat");
+    mFilePath = QString::fromLatin1("");
 }
 
 double BWOExpModel::startValue()
@@ -158,6 +161,20 @@ void BWOExpModel::setFileName(const QString &value)
 
     mFileName = value;
     emit  fileNameChanged(mFileName);
+}
+
+QString BWOExpModel::filePath()
+{
+    return mFilePath;
+}
+
+void BWOExpModel::setFilePath(const QString &value)
+{
+    if (value == mFilePath)
+        return;
+
+    mFilePath = value;
+    emit filePathChanged(mFilePath);
 }
 
 double BWOExpModel::alphaCoefficient()
