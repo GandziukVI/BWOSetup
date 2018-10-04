@@ -14,7 +14,7 @@ public:
     ~BWOExperiment() override;                  // ?? What should we override? Should we make the IExp destructor virtual then?
     void stop() override;
     void openFolder();
-
+    void set();
 private:
     BWOExperiment();
 

@@ -78,7 +78,9 @@ void BWOExperiment::releaseHardware()
     qDebug() << "Resetting voltage and cleaning tasks...";
     try
     {
-        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, TIMEOUT, 0, NULL));
+        // Move this command somewhere else. Or set 1500 V as a default for warming.
+        // Better to set 0 after closing the programm
+        //DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, TIMEOUT, 0, NULL));
     }
     catch(int error)
     {
@@ -98,7 +100,7 @@ void BWOExperiment::releaseHardware()
         DAQmxStopTask(hTaskOutput);
         DAQmxClearTask(hTaskOutput);
     }
-    qDebug() << "Voltage was reset. Tasks are cleaned.";
+    qDebug() << "/*Voltage was reset.*/ Tasks are cleaned.";
 }
 
 void BWOExperiment::toDo(QObject *expSettings)
@@ -193,6 +195,26 @@ void BWOExperiment::toDo(QObject *expSettings)
     dataFile->close();
     qDebug() << "Experiment is finished.";
 
+    releaseHardware();
+}
+
+void BWOExperiment::set()
+{
+    BWOExpModel *model = qobject_cast<BWOExpModel*>(mExpSettings);
+    initializeHardware();
+    try {
+        qDebug() << "Set voltage confirmed";
+        DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, TIMEOUT, model->exactVoltageValue(), NULL));
+    }
+    catch(int error)
+    {
+        DAQmxGetExtendedErrorInfo(errBuff,2048);
+        qDebug() << "DAQmx Error " << error << ":" << errBuff << endl;
+    }
+    catch (...)
+    {
+        qDebug() << "Unknown exception caught\n";
+    }
     releaseHardware();
 }
 

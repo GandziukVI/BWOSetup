@@ -3,5 +3,6 @@
         <file>qml/main.qml</file>
         <file>qml/CExtendedNumberInput.qml</file>
         <file>qml/CTextField.qml</file>
+        <file>qml/CNumberInput.qml</file>
     </qresource>
 </RCC>

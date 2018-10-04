@@ -21,9 +21,10 @@ Item {
     signal startButtonClicked()
     signal stopButtonClicked()
     signal openFolderClicked()
+    signal setButtonClicked()
 
-    property variant measUnit: qsTr("Hz");
-    property variant measType: qsTr("Frequency, Hz")
+    property variant measUnit: qsTr("V");
+    property variant measType: qsTr("Voltage, V")
 
     GridLayout {
         anchors.fill: parent
@@ -88,6 +89,7 @@ Item {
                 }
             }
 
+            // Progress Bar
             RowLayout {
                 Layout.fillWidth: true
 
@@ -114,8 +116,29 @@ Item {
                         property: "progress"
                         value: bwoExpProgress.value
                     }
+                    //Binding to an Inaccessible Property
+                    //to bind an object's property to that of another object that isn't directly instantiated by QML, such as a property of a class exported to QML by C++. You can use the Binding type to establish this dependency; binding any value to any object's property.
                 }
             }
+
+            // Status Line
+            RowLayout {
+                Layout.fillWidth: true
+
+                Layout.topMargin: 2.5
+                Layout.bottomMargin: 2.5
+                Layout.leftMargin: 5
+                Layout.rightMargin: 5
+
+                Label {
+                    text: qsTr("Status: ")
+                }
+
+                Text {
+                    id: bwoExpStatus
+                    text: "Status of the current operation or state"
+                    }
+                }
         }
 
         // BWO Settings
@@ -240,8 +263,19 @@ Item {
 
                                 ColumnLayout {
                                     RadioButton {
-                                        text: qsTr("Frequency Steps")
+                                        text: qsTr("Voltage Steps")
                                         checked: true
+
+                                        onCheckedChanged: {
+                                            if (checked) {
+                                                root.measUnit = qsTr("V");
+                                                root.measType = qsTr("Voltage, V");
+                                                bwoChart.update();
+                                            }
+                                        }
+                                    }
+                                    RadioButton {
+                                        text: qsTr("Frequency Steps")
 
                                         onCheckedChanged: {
                                             if (checked) {
@@ -251,16 +285,39 @@ Item {
                                             }
                                         }
                                     }
-                                    RadioButton {
-                                        text: qsTr("Voltage Steps")
+                                }
+                            }
 
-                                        onCheckedChanged: {
-                                            if (checked) {
-                                                root.measUnit = qsTr("V");
-                                                root.measType = qsTr("Voltage, V");
-                                                bwoChart.update();
-                                            }
-                                        }
+                            // Set Voltage
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Set Voltage")
+                            }
+                            GridLayout {
+                                width: bwoSettings.width
+                                height: 40
+
+                                columns: 2
+                                CNumberInput{
+                                    id: exactVoltageValue
+                                    Layout.fillWidth: true
+                                    height: 40
+                                    validator: DoubleValidator { locale: qsTr("en_US") }
+                                    inputValue: dataModel.exactVoltageValue
+                                    Binding {
+                                        target: dataModel
+                                        property: "exactVoltageValue"
+                                        value: exactVoltageValue.inputValue
+                                    }
+                                }
+                                Button {
+                                    Layout.fillWidth: false
+                                    implicitWidth: 75
+                                    height: 40
+                                    text: qsTr("Set")
+                                    enabled: startStopItem.enabledState
+                                    onClicked: {
+                                        root.setButtonClicked()
                                     }
                                 }
                             }

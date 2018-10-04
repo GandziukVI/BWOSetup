@@ -18,6 +18,9 @@ int main(int argc, char **argv)
 
     qmlRegisterType<BWOExpModel>("BWOModel", 1, 0, "BWOExpModel");  // registers the C++ type in the QML system with the BWOExpModel name in the
                                                                     // library imported from BWOModel 1.0; which registers the type T=BWOExpModel as a new type
+                                                                    // register the type BWOExpModel
+                                                                    // under the url "BWOModel" in version 1.0
+                                                                    // under the name "BWOExpModel"
     BWOExpModel dataModel;
     BWOExperiment bwoExperiment(&dataModel);
 
@@ -41,6 +44,7 @@ int main(int argc, char **argv)
 
     QObject::connect(item, SIGNAL(startButtonClicked()), &bwoExperiment, SLOT(start()));
     QObject::connect(item, SIGNAL(stopButtonClicked()), &bwoExperiment, SLOT(stop()));
+    QObject::connect(item, SIGNAL(setButtonClicked()), &bwoExperiment, SLOT(set()));
     QObject::connect(item, SIGNAL(openFolderClicked()), &bwoExperiment, SLOT(openFolder()));
 
     viewer.show();

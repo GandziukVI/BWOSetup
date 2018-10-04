@@ -10,7 +10,8 @@ DEFINES += QT_DEPRECATED_WARNINGS
 DISTFILES += \
     qml/main.qml \
     qml/CExtendedNumberInput.qml \
-    qml/CTextField.qml
+    qml/CTextField.qml \
+    qml/CNumberInput.qml
 
 # You can also make your code fail to compile if you use deprecated APIs.
 # In order to do so, uncomment the following line.

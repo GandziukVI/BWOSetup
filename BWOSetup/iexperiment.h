@@ -23,6 +23,7 @@ public slots:                                       // Slots those should react 
     virtual void start();
     virtual void stop();
     virtual void openFolder() = 0;                      // Cannot connect signal without this. Should be changed.
+    virtual void set() = 0;
 
 protected:
     bool    mExperimentIsRunning;

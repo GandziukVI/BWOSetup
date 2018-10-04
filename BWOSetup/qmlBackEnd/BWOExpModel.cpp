@@ -3,7 +3,8 @@
 BWOExpModel::BWOExpModel(QObject *parent)
     : QObject (parent),
       mStartValue(0),
-      mStopValue(3),
+      mStopValue(2),
+      mExactValue(0),
       mNDataPoints(7),
       mNAverages(3),
       mDelayTime(0.5),
@@ -45,6 +46,20 @@ void BWOExpModel::setStopValue(const double &value)
 
     mStopValue = value;
     emit stopValueChanged(mStopValue);
+}
+
+double BWOExpModel::exactVoltageValue()
+{
+    return mExactValue;
+}
+
+void BWOExpModel::setExactVoltageValue(const double &value)
+{
+    if (value == mExactValue)
+        return;
+
+    mExactValue = value;
+    emit exactVoltageValueChanged(mExactValue);
 }
 
 int BWOExpModel::nDataPoints()

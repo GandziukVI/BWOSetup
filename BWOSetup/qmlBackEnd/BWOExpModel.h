@@ -15,6 +15,7 @@ class BWOExpModel : public QObject
     // The NOTIFY signal should only be emitted when the property has really been changed
     Q_PROPERTY(double startValue READ startValue WRITE setStartValue NOTIFY startValueChanged)
     Q_PROPERTY(double stopValue READ stopValue WRITE setStopValue NOTIFY stopValueChanged)
+    Q_PROPERTY(double exactVoltageValue READ exactVoltageValue WRITE setExactVoltageValue NOTIFY exactVoltageValueChanged)
     Q_PROPERTY(int nDataPoints READ nDataPoints WRITE setNDataPoints NOTIFY nDataPointsChanged)
     Q_PROPERTY(int nAverages READ nAverages WRITE setNAverages NOTIFY nAveragesChanged)
     Q_PROPERTY(double delayTime READ delayTime WRITE setDelayTime NOTIFY delayTimeChanged)
@@ -34,6 +35,9 @@ public:
 
     double  stopValue();
     void    setStopValue(const double &value);
+
+    double  exactVoltageValue();
+    void    setExactVoltageValue(const double &value);
 
     int     nDataPoints();
     void    setNDataPoints(const int &value);
@@ -72,6 +76,7 @@ public:
 signals:
     void startValueChanged(const double&);
     void stopValueChanged(const double&);
+    void exactVoltageValueChanged(const double&);
     void nDataPointsChanged(const int&);
     void nAveragesChanged(const int&);
     void delayTimeChanged(const double&);
@@ -89,6 +94,7 @@ signals:
 private:
     double  mStartValue;  // Either Voltage or Frequency
     double  mStopValue;   // Either Voltage or Frequency
+    double  mExactValue;
     int     mNDataPoints;
     int     mNAverages;
     double  mDelayTime;   // Delay time in seconds
