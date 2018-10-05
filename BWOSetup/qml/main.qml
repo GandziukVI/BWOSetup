@@ -22,7 +22,6 @@ Item {
 
     signal startButtonClicked()
     signal stopButtonClicked()
-    signal openFolderClicked()
     signal setButtonClicked()
 
     property variant measUnit: qsTr("V");
@@ -489,7 +488,12 @@ Item {
                     Layout.fillHeight: true
                     Layout.maximumHeight: 40
                     property bool enabledState: true
-
+                    Connections {
+                        target: dataModel
+                        onRunButtonActiveChanged: {
+                            startStopItem.enabledState = true;
+                        }
+                    }
                     RowLayout {
                         anchors.fill: parent
                         Button {

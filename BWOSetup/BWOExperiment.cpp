@@ -176,6 +176,7 @@ void BWOExperiment::toDo(QObject *expSettings)
             else
                 break;
         }
+        model->runButtonActiveChanged();
     }
     catch(int error)
     {
@@ -219,14 +220,4 @@ void BWOExperiment::set()
         qDebug() << "Unknown exception caught\n";
     }
     releaseHardware();
-}
-
-void BWOExperiment::openFolder()    // realization is not okay, should be changed if needed
-{
-    QWidget *temp = new QWidget();
-    folderPath = QFileDialog::getExistingDirectory(temp, tr("Open Directory"),
-                                                 "/home",
-                                                 QFileDialog::ShowDirsOnly
-                                                 | QFileDialog::DontResolveSymlinks);
-    delete temp;
 }
