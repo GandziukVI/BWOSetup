@@ -176,7 +176,7 @@ void BWOExperiment::toDo(QObject *expSettings)
             else
                 break;
         }
-        model->runButtonActiveChanged();
+        model->activateStartButton();
     }
     catch(int error)
     {

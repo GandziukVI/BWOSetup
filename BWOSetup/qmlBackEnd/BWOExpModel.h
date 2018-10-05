@@ -96,7 +96,7 @@ signals:
     void addNewLineSeries(const QString &chartNameString);
     void addNewDataPoint(const QPointF &dataPoint);
 
-    void runButtonActiveChanged();
+    void activateStartButton();
 
 private:
     double  mStartValue;  // Either Voltage or Frequency

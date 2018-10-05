@@ -225,7 +225,7 @@ Item {
                             // BWO lamp coefficients
                             Label {
                                 Layout.margins: 2.5
-                                text: qsTr("BWO coefficient alpha [V^1/2 / Hz]")
+                                text: qsTr("BWO coefficient alpha [V^1/2 / GHz]")
                             }
                             CTextField {
                                 id: alphaCoefficient
@@ -241,7 +241,7 @@ Item {
 
                             Label {
                                 Layout.margins: 2.5
-                                text: qsTr("BWO coefficient beta  [Hz^-1]")
+                                text: qsTr("BWO coefficient beta  [GHz^-1]")
                             }
                             CTextField {
                                 id: betaCoefficient
@@ -490,7 +490,7 @@ Item {
                     property bool enabledState: true
                     Connections {
                         target: dataModel
-                        onRunButtonActiveChanged: {
+                        onActivateStartButton: {
                             startStopItem.enabledState = true;
                         }
                     }
