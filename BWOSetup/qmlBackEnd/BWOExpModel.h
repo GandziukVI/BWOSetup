@@ -19,6 +19,7 @@ class BWOExpModel : public QObject
     Q_PROPERTY(int nDataPoints READ nDataPoints WRITE setNDataPoints NOTIFY nDataPointsChanged)
     Q_PROPERTY(int nAverages READ nAverages WRITE setNAverages NOTIFY nAveragesChanged)
     Q_PROPERTY(double delayTime READ delayTime WRITE setDelayTime NOTIFY delayTimeChanged)
+    Q_PROPERTY(double deltaTime READ deltaTime WRITE setDeltaTime NOTIFY deltaTimeChanged)
     Q_PROPERTY(QString niDeviceName READ niDeviceName WRITE setNIDeviceName NOTIFY niDeviceNameChanged)
     Q_PROPERTY(QString pinAO READ pinAO WRITE setPinAO NOTIFY pinAOChanged)
     Q_PROPERTY(QString pinAI READ pinAI WRITE setPinAI NOTIFY pinAIChanged)
@@ -48,6 +49,9 @@ public:
 
     double  delayTime();
     void    setDelayTime(const double &value);
+
+    double  deltaTime();
+    void    setDeltaTime(const double &value);
 
     QString niDeviceName();
     void    setNIDeviceName(const QString &value);
@@ -84,6 +88,7 @@ signals:
     void nDataPointsChanged(const int&);
     void nAveragesChanged(const int&);
     void delayTimeChanged(const double&);
+    void deltaTimeChanged(const double&);
     void niDeviceNameChanged(const QString&);
     void pinAOChanged(const QString&);
     void pinAIChanged(const QString&);
@@ -105,6 +110,7 @@ private:
     int     mNDataPoints;
     int     mNAverages;
     double  mDelayTime;   // Delay time in seconds
+    double  mDeltaTime;   // Delta time in seconds
     QString mDeviceName;
     QString mPinAO;
     QString mPinAI;

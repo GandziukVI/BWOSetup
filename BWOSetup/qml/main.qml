@@ -431,6 +431,28 @@ Item {
                                 units: qsTr("s")
                             }
 
+                            // Delta Time
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Delta Time")
+                            }
+                            CExtendedNumberInput {
+                                id: deltaTimeInput
+                                Layout.fillWidth: true
+
+                                height: 40
+
+                                inputValue: dataModel.deltaTime
+                                Binding {
+                                    target: dataModel
+                                    property: "deltaTime"
+                                    value: deltaTimeInput.inputValue
+                                }
+
+                                validator: DoubleValidator { locale: qsTr("en_US") }
+                                units: qsTr("s")
+                            }
+
                             // File Name
                             Label {
                                 Layout.margins: 2.5

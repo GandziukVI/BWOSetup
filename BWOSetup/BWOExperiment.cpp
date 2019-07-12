@@ -129,6 +129,7 @@ void BWOExperiment::toDo(QObject *expSettings)
         int32     numberPoints = model->nDataPoints();
         int32     averageCycles = model->nAverages();
         double    delayBetweenMeasurements = model->delayTime();
+        double    delayBetweenPoints = model->deltaTime();
         double    alphaCoefficient = model->alphaCoefficient();
         double    betaCoefficient = model->betaCoefficient();
 
@@ -145,7 +146,7 @@ void BWOExperiment::toDo(QObject *expSettings)
             if (mExperimentIsRunning) {
                 frequencyWriteVoltage = lowestVoltage + delta * i;
                 DAQmxErrChk (DAQmxWriteAnalogScalarF64(hTaskOutput, false, TIMEOUT, frequencyWriteVoltage, NULL));
-                QThread::msleep(500);
+                QThread::msleep(static_cast<unsigned long>(delayBetweenMeasurements * 1000.0));
                 qDebug() << "Current output voltage value is " << frequencyWriteVoltage;
                 average = 0;
                 for(int32 j = 1; j <= averageCycles; j++)
@@ -154,7 +155,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                         DAQmxErrChk (DAQmxReadAnalogScalarF64(hTaskInput, TIMEOUT, &voltageReadValue, NULL));
                         average += voltageReadValue;
                         qDebug() << "Current read voltage value is " << voltageReadValue;
-                        QThread::msleep(static_cast<unsigned long>(delayBetweenMeasurements * 1000.0));
+                        QThread::msleep(static_cast<unsigned long>(delayBetweenPoints * 1000.0));
                         double progress = static_cast<double>(i * averageCycles + j) / numberPoints / averageCycles * 100.0;
                         emit ProgressChanged(progress);
                         model->setProgress(progress);

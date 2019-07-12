@@ -8,6 +8,7 @@ BWOExpModel::BWOExpModel(QObject *parent)
       mNDataPoints(7),
       mNAverages(3),
       mDelayTime(0.5),
+      mDeltaTime(0.001),
       mProgress(0.0),
       mAlphaCoefficient(0.083073),
       mBetaCoefficient(0.00149)
@@ -105,6 +106,20 @@ void BWOExpModel::setDelayTime(const double &value)
 
     mDelayTime = value;
     emit delayTimeChanged(mDelayTime);
+}
+
+double BWOExpModel::deltaTime()
+{
+    return mDeltaTime;
+}
+
+void BWOExpModel::setDeltaTime(const double &value)
+{
+    if (value == mDeltaTime)
+        return;
+
+    mDeltaTime = value;
+    emit deltaTimeChanged(mDeltaTime);
 }
 
 QString BWOExpModel::niDeviceName()
