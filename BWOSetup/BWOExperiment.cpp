@@ -166,8 +166,8 @@ void BWOExperiment::toDo(QObject *expSettings)
                 average /= averageCycles;
 
                 out << frequencyWriteVoltage << "\t" <<
-                       frequencyWriteVoltage * 600 << "\t" <<
-                       sqrt(frequencyWriteVoltage * 600) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * 600)) << "\t" <<
+                       frequencyWriteVoltage * CONVERT_VDAQ_VBWO << "\t" <<
+                       sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO)) << "\t" <<
                        average << "\t" <<
                        0 << "\t" << 0 << endl;
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));
