@@ -73,16 +73,12 @@ Rectangle {
                 ListElement { text: qsTr("G") }
                 ListElement { text: qsTr("M") }
                 ListElement { text: qsTr("k") }
-                ListElement { text: qsTr("h") }
-                ListElement { text: qsTr("da") }
                 ListElement { text: qsTr("") }
                 ListElement { text: qsTr("m") }
-                ListElement { text: qsTr("μ") }
-                ListElement { text: qsTr("n") }
             }
 
             // The var type is a generic property type that can refer to any data type.
-            property var multiplierCoefficients: [1.0e9, 1.0e6, 1.0e3, 1.0e2, 10.0, 1.0, 1.0e-3, 1.0e-6, 1.0e-9 ]
+            property var multiplierCoefficients: [1.0e9, 1.0e6, 1.0e3, 1.0, 1.0e-3]
 
             model: ListModel {
                 id: multiplierSelectorModel

@@ -3,7 +3,7 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtCharts 2.2
-
+import QtQuick.Dialogs 1.3
 import Qt.labs.platform 1.0
 
 import BWOModel 1.0
@@ -138,8 +138,19 @@ Item {
                 Text {
                     id: bwoExpStatus
                     text: "Status of the current operation or state"
-                    }
                 }
+            }
+
+            Button {
+                Layout.maximumHeight: 40
+                Layout.maximumWidth: 400
+                Layout.fillWidth: true
+                Layout.fillHeight: true
+                text: qsTr("Delete All Plots")
+                onClicked: {
+                    bwoChart.removeAllSeries();
+                }
+            }
         }
 
         // BWO Settings
