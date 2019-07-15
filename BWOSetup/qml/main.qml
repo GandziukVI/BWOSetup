@@ -59,7 +59,7 @@ Item {
                     id: bwoChartYAxis
 
                     min: 0
-                    max: 2
+                    max: 5
                 }
 
                 function createAxis(min, max) {
