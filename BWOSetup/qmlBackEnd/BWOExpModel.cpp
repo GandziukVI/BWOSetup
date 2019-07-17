@@ -21,6 +21,7 @@ BWOExpModel::BWOExpModel(QObject *parent)
     mCurrentLineSeries = QString::fromLatin1("BWO Experiment");
 
     mFileName = QString::fromLatin1("BWO Data #00.dat");
+    mCalibFileName = QString::fromLatin1("");
     mFilePath = QString::fromLatin1("");
 }
 
@@ -190,6 +191,20 @@ void BWOExpModel::setFilePath(const QString &value)
 
     mFilePath = value;
     emit filePathChanged(mFilePath);
+}
+
+QString BWOExpModel::calibFile()
+{
+    return mCalibFileName;
+}
+
+void BWOExpModel::setCalibFile(const QString &value)
+{
+    if (value == mCalibFileName)
+        return;
+
+    mCalibFileName = value;
+    emit calibFileChanged(mCalibFileName);
 }
 
 double BWOExpModel::alphaCoefficient()

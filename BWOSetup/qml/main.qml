@@ -3,7 +3,6 @@ import QtQuick.Window 2.2
 import QtQuick.Controls 2.2
 import QtQuick.Layouts 1.3
 import QtCharts 2.2
-import QtQuick.Dialogs 1.3
 import Qt.labs.platform 1.0
 
 import BWOModel 1.0
@@ -263,6 +262,50 @@ Item {
                                     target: dataModel
                                     property: "betaCoefficient"
                                     value: betaCoefficient.text
+                                }
+                            }
+
+                            // Read calibration file
+                            Label {
+                                Layout.margins: 2.5
+                                text: qsTr("Calibration file")
+                            }
+                            GridLayout {
+                                Layout.fillWidth: true
+                                height: 40
+                                columns: 2
+
+                                FileDialog{
+                                    id: calibFileDialog;
+                                    title: "Please choose a file";
+                                    nameFilters: ["Data Files (*.txt *.dat)", "All Files (*.*)"];
+                                    onAccepted: {
+                                        var path = String(calibFileDialog.file)
+                                        if (path.indexOf("file:///") === 0) {
+                                            path = path.slice(8);  // 8 - length of file:/// string
+                                        }
+                                        path = decodeURIComponent(path);
+                                        console.log("User has selected " + path);
+                                        calibFileDialog.close()
+                                        calib.text = path
+                                        dataModel.calibFile = path;
+                                    }
+                                }
+
+                                CTextField {
+                                    id: calib
+                                    Layout.fillWidth: true
+                                    height: 40
+                                }
+
+                                Button{
+                                    Layout.fillWidth: false
+                                    implicitWidth: 75
+                                    height: 40
+                                    text: qsTr("Open file")
+                                    onClicked: {
+                                        calibFileDialog.open()
+                                    }
                                 }
                             }
 

@@ -28,6 +28,7 @@ class BWOExpModel : public QObject
     Q_PROPERTY(double betaCoefficient READ betaCoefficient WRITE setBetaCoefficient NOTIFY betaCoefficientChanged)
     Q_PROPERTY(QString fileName READ fileName WRITE setFileName NOTIFY fileNameChanged)
     Q_PROPERTY(QString filePath READ filePath WRITE setFilePath NOTIFY filePathChanged)
+    Q_PROPERTY(QString calibFile READ calibFile WRITE setCalibFile NOTIFY calibFileChanged)
 
 public:
     explicit BWOExpModel(QObject *parent = nullptr);
@@ -74,6 +75,9 @@ public:
     QString filePath();
     void    setFilePath(const QString &value);
 
+    QString calibFile();
+    void    setCalibFile(const QString &value);
+
     double  progress();
     void    setProgress(const double &value);
 
@@ -97,6 +101,7 @@ signals:
     void progressChanged(const double&);
     void fileNameChanged(const QString&);
     void filePathChanged(const QString&);
+    void calibFileChanged(const QString&);
 
     void addNewLineSeries(const QString &chartNameString);
     void addNewDataPoint(const QPointF &dataPoint);
@@ -119,6 +124,7 @@ private:
     double  mBetaCoefficient;
     QString mFileName;
     QString mFilePath;
+    QString mCalibFileName;
 
     QString mCurrentLineSeries;
 };

@@ -115,6 +115,25 @@ void BWOExperiment::toDo(QObject *expSettings)
 
     dataFile = new QFile(model->filePath() + "/" + model->fileName());
 
+    if (model->calibFile() == "")
+    {
+        // use default calibration == normalized by 1
+        // create calibration data that are linear
+    }
+    else
+    {
+        // read and create the calibration data which that will be used for in a function calibration(value, calibdata)
+        calibDataFile = new QFile(model->calibFile());
+        calibDataFile->open(QIODevice::ReadOnly);
+        QTextStream in(calibDataFile);
+        while(!in.atEnd()) {
+            QString line = in.readLine();
+            QStringList fields = line.split("\t");
+
+        }
+        calibDataFile->close();
+    }
+
     initializeHardware();
     emit ExperimentStarted();
     mExperimentIsRunning = true;
@@ -170,6 +189,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                        sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO)) << "\t" <<
                        average << "\t" <<
                        0 << "\t" << 0 << endl;
+                // add function for calibration. Something like calibration(average, calibdata)
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));
 
                 qDebug() << "Averaged value is " << average;

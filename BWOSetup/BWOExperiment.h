@@ -29,6 +29,7 @@ private:
     TaskHandle  hTaskOutput = nullptr;
 
     QFile       *dataFile;
+    QFile       *calibDataFile;
     QString     folderPath;
 
 private:
