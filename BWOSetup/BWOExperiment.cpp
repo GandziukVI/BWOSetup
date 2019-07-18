@@ -105,6 +105,29 @@ void BWOExperiment::releaseHardware()
     qDebug() << "/*Voltage was reset.*/ Tasks are cleaned.";
 }
 
+double linearCalib(double x, double y, QVector<double> xarr, QVector<double> yarr)
+{
+    // linear extrapolation. suppose that all xarr is sorted
+    double y_norm;
+    if (x <= xarr[0]){
+        y_norm = (yarr[1] - yarr[0]) / (xarr[1] - xarr[0]) * x + (xarr[1] * yarr[0] - xarr[0] * yarr[1]) / (xarr[1] - xarr[0]);
+        // y_norm = a * x + b
+    }
+    else
+        if(x >= xarr[xarr.length() - 1])        {
+            int last = xarr.length() - 1;
+            y_norm = (yarr[last] - yarr[last - 1]) / (xarr[last] - xarr[last - 1]) * x + (xarr[last] * yarr[last - 1] - xarr[last - 1] * yarr[last]) / (xarr[last] - xarr[last - 1]);
+            // y_norm = a * x + b
+        }
+        else{
+            int i = 0;
+            while (x > xarr[i]) i++;
+            y_norm = (yarr[i] - yarr[i - 1]) / (xarr[i] - xarr[i - 1]) * x + (xarr[i] * yarr[i - 1] - xarr[i - 1] * yarr[i]) / (xarr[i] - xarr[i - 1]);
+            // y_norm = a * x + b
+        }
+    return y / y_norm;
+}
+
 void BWOExperiment::toDo(QObject *expSettings)
 {
     BWOExpModel *model = qobject_cast<BWOExpModel*>(expSettings);
@@ -115,10 +138,13 @@ void BWOExperiment::toDo(QObject *expSettings)
 
     dataFile = new QFile(model->filePath() + "/" + model->fileName());
 
+    QVector<double> Vlampcal;
+    QVector<double> Voutcal;
     if (model->calibFile() == "")
     {
         // use default calibration == normalized by 1
         // create calibration data that are linear
+        qDebug() << Vlampcal.length();
     }
     else
     {
@@ -126,10 +152,15 @@ void BWOExperiment::toDo(QObject *expSettings)
         calibDataFile = new QFile(model->calibFile());
         calibDataFile->open(QIODevice::ReadOnly);
         QTextStream in(calibDataFile);
+        int i = 0;
         while(!in.atEnd()) {
             QString line = in.readLine();
             QStringList fields = line.split("\t");
-
+            if (i != 0){
+                Vlampcal.append(fields[1].toDouble());
+                Voutcal.append(fields[3].toDouble());
+            }
+            i++;
         }
         calibDataFile->close();
     }
@@ -141,7 +172,7 @@ void BWOExperiment::toDo(QObject *expSettings)
     {
         if (!dataFile->open(QFile::WriteOnly)) throw dataFile->error();
         QTextStream out(dataFile);
-        out << "V_NI (V)\tV_cat (V)\tf (GHz)\tV_det (V)\tV_detc (V)\tT (K)" << endl;
+        out << "V_NI (V)\tV_cat (V)\tf (GHz)\tV_det (V)\tT_detc ()\tT (K)" << endl;
 
         float64   lowestVoltage = model->startValue();
         float64   hightesVoltage = model->stopValue();
@@ -188,7 +219,8 @@ void BWOExperiment::toDo(QObject *expSettings)
                        frequencyWriteVoltage * CONVERT_VDAQ_VBWO << "\t" <<
                        sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO)) << "\t" <<
                        average << "\t" <<
-                       0 << "\t" << 0 << endl;
+                       ((Vlampcal.length() == 0)?average:linearCalib(frequencyWriteVoltage * CONVERT_VDAQ_VBWO, average, Vlampcal, Voutcal)) << "\t" <<
+                       0 << endl;
                 // add function for calibration. Something like calibration(average, calibdata)
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));
 

@@ -439,7 +439,7 @@ Item {
                                     value: nPointsInput.integerValue
                                 }
 
-                                validator: IntValidator { locale: qsTr("en_US") }
+                                validator: IntValidator { locale: qsTr("en_US"); bottom: 1 }
                             }
 
                             // Averaging
@@ -460,7 +460,7 @@ Item {
                                     value: nAveragingInput.integerValue
                                 }
 
-                                validator: IntValidator { locale: qsTr("en_US") }
+                                validator: IntValidator { locale: qsTr("en_US"); bottom: 1;}
                             }
 
                             // Delay Time
