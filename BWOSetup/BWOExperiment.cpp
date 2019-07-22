@@ -219,7 +219,7 @@ void BWOExperiment::toDo(QObject *expSettings)
                        frequencyWriteVoltage * CONVERT_VDAQ_VBWO << "\t" <<
                        sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO) / (alphaCoefficient + betaCoefficient * sqrt(frequencyWriteVoltage * CONVERT_VDAQ_VBWO)) << "\t" <<
                        average << "\t" <<
-                       ((Vlampcal.length() == 0)?average:linearCalib(frequencyWriteVoltage * CONVERT_VDAQ_VBWO, average, Vlampcal, Voutcal)) << "\t" <<
+                       ((Vlampcal.length() == 0)?0:linearCalib(frequencyWriteVoltage * CONVERT_VDAQ_VBWO, average, Vlampcal, Voutcal)) << "\t" <<
                        0 << endl;
                 // add function for calibration. Something like calibration(average, calibdata)
                 model->addDataPoint(QPointF(frequencyWriteVoltage, average));

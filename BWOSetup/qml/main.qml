@@ -280,7 +280,7 @@ Item {
                                     title: "Please choose a file";
                                     nameFilters: ["Data Files (*.txt *.dat)", "All Files (*.*)"];
                                     onAccepted: {
-                                        var path = String(calibFileDialog.file)
+                                        var path = calibFileDialog.file.toString()
                                         if (path.indexOf("file:///") === 0) {
                                             path = path.slice(8);  // 8 - length of file:/// string
                                         }
