@@ -2,16 +2,16 @@
 
 BWOExpModel::BWOExpModel(QObject *parent)
     : QObject (parent),
-      mStartValue(2.62),
+      mStartValue(2.616605617),
       mStopValue(5),
       mExactValue(2.62),
-      mNDataPoints(223),
+      mNDataPoints(245),
       mNAverages(50),
       mDelayTime(2),
       mDeltaTime(0),
       mProgress(0.0),
-      mAlphaCoefficient(0.18883),
-      mBetaCoefficient(0.00078598)
+      mAlphaCoefficient(0.16389),
+      mBetaCoefficient(0.00114)
 {
     mDeviceName = QString::fromLatin1("Dev1");
 
